@@ -1,0 +1,20 @@
+{
+  "name": "side-burger",
+  "version": "0.0.0",
+  "description": "side drawer custom element triggered by a hamburger menu button typically",
+  "homepage": "https://github.com/bahrus/side-burger#readme",
+  "bugs": {
+    "url": "https://github.com/bahrus/side-burger/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahrus/side-burger.git"
+  },
+  "license": "MIT",
+  "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  }
+}
