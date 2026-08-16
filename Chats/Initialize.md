@@ -46,4 +46,14 @@ I followed the HTML-first path in [NewHTMLFirstCustomElement.md](../types/NewHTM
 
 I did not create any tests or run any commands as requested.
 
+---
+
+## Bruce's Findings / Lessons Learned
+
+The web component worked right off the bat!  But it does give some accessibility warnings, as Kimi predicted.
+
+I found that the typescript guidance was inadequate, and corrected that (backfilling to plus-minus).
+
+
+
 

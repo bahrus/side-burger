@@ -14,7 +14,7 @@ const withMethods = [m['🔍']];
 const $ = (/** @type {typeof paths<AP>} */ (/** @type {any} */(paths)))({ withMethods });
 
 /**
- * @type {RoundaboutOptions<EndUserProps>}
+ * @type {RoundaboutOptions<AP>}
  */
 const raConfig = {
     weakRef: {
@@ -70,7 +70,7 @@ const raConfig = {
     }
 };
 
-/** @type {ElMakerConfig<EndUserProps>} */
+/** @type {ElMakerConfig<AP>} */
 const features = {
     assignFeatures: {
         roundabout: {

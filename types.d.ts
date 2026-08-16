@@ -11,13 +11,17 @@ export interface EndUserProps {
     disabled: boolean;
 }
 
-export interface AP extends EndUserProps, HTMLElement {
+export interface AllProps extends EndUserProps {
     hamburgerButton: HTMLButtonElement;
     closeButton: HTMLButtonElement;
     overlay: HTMLDivElement;
     drawer: HTMLDivElement;
     clone: Element | DocumentFragment | ShadowRoot;
 }
+
+export type AP = AllProps;
+
+export interface RunTimeProps extends AllProps, HTMLElement
 
 export type PAP = Partial<AP>;
 
