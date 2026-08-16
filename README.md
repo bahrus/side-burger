@@ -3,7 +3,7 @@
 side drawer custom element triggered by a hamburger menu button typically.
 
 ```html
-<side-burger imp-h='side-bar/root.html'>
+<side-burger imp-h='side-burger/root.html'>
     <nav>
         <menu>
             <li><a href="#home">Home</a></li>
@@ -11,7 +11,7 @@ side drawer custom element triggered by a hamburger menu button typically.
             <li><a href="#contact">Contact</a></li>
         </menu>
     </nav>
-    <script type=precede src="side-bar/el-maker.json"></script>
+    <script type=precede src="side-burger/el-maker.json"></script>
 </side-burger>
 ```
 

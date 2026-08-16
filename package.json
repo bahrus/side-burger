@@ -1,7 +1,10 @@
 {
   "name": "side-burger",
-  "version": "0.0.0",
-  "description": "side drawer custom element triggered by a hamburger menu button typically",
+  "version": "0.0.1",
+  "description": "Material Design inspired side drawer custom element triggered by a hamburger menu button",
+  "type": "module",
+  "main": "root.mjs",
+  "module": "root.mjs",
   "homepage": "https://github.com/bahrus/side-burger#readme",
   "bugs": {
     "url": "https://github.com/bahrus/side-burger/issues"
@@ -12,9 +15,21 @@
   },
   "license": "MIT",
   "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
-  "type": "module",
-  "main": "index.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "serve": "node ./node_modules/spa-ssi/serve.js",
+    "update": "ncu -u && npm install",
+    "build-el-maker": "node --watch el-maker.mjs"
+  },
+  "dependencies": {
+    "assign-gingerly": "0.0.81",
+    "be-hive": "0.1.16",
+    "el-maker": "0.0.17",
+    "imp-h": "0.0.6",
+    "mount-observer": "0.1.51"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "spa-ssi": "0.0.27"
   }
 }

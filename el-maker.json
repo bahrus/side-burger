@@ -1,0 +1,87 @@
+{
+    "assignFeatures": {
+        "roundabout": {
+            "customData": {
+                "raConfig": {
+                    "weakRef": {
+                        "properties": [
+                            "hamburgerButton",
+                            "closeButton",
+                            "overlay",
+                            "drawer"
+                        ],
+                        "logIfCollected": "warn"
+                    },
+                    "assignOptions": {
+                        "akaMethods": {
+                            "🔍": "querySelector"
+                        }
+                    },
+                    "compacts": {
+                        "on_click_of_hamburgerButton_assign": {
+                            "expanded": true
+                        },
+                        "on_click_of_closeButton_assign": {
+                            "expanded": false
+                        },
+                        "on_click_of_overlay_assign": {
+                            "expanded": false
+                        }
+                    },
+                    "merges": [
+                        {
+                            "ifKeyIn": [
+                                "clone"
+                            ],
+                            "assign": {
+                                "?.hamburgerButton": "?.clone?.querySelector?.[name=hamburger]",
+                                "?.closeButton": "?.clone?.querySelector?.[name=close]",
+                                "?.overlay": "?.clone?.querySelector?.[name=overlay]",
+                                "?.drawer": "?.clone?.querySelector?.[name=drawer]"
+                            }
+                        },
+                        {
+                            "ifKeyIn": [
+                                "expanded"
+                            ],
+                            "assign": {
+                                "?.hamburgerButton?.ariaExpanded": "?.expanded",
+                                "?.drawer?.ariaHidden ?=": [
+                                    "?.expanded",
+                                    false,
+                                    true
+                                ],
+                                "?.overlay?.ariaHidden ?=": [
+                                    "?.expanded",
+                                    false,
+                                    true
+                                ],
+                                "?.drawer?.inert ?=": [
+                                    "?.expanded",
+                                    false,
+                                    true
+                                ]
+                            }
+                        },
+                        {
+                            "ifKeyIn": [
+                                "disabled"
+                            ],
+                            "ifAllOf": [
+                                "clone"
+                            ],
+                            "assign": {
+                                "?.hamburgerButton?.disabled": "?.disabled"
+                            }
+                        }
+                    ],
+                    "defaultPropVals": {
+                        "expanded": false,
+                        "disabled": false
+                    }
+                }
+            }
+        },
+        "templateMaker": {}
+    }
+}
