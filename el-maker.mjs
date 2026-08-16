@@ -35,7 +35,7 @@ const raConfig = {
         },
         on_click_of_overlay_assign: {
             expanded: false
-        }
+        },
     },
     merges: smoothOver([
         {
