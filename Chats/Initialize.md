@@ -1,6 +1,8 @@
 # Initialization
 
---- Bruce's Ask
+--- 
+
+## Bruce's Ask
 
 Can you please follow the [New Custom Element](../types/NewCustomElement.md) instructions to generate a web component as described by the [README.md](../README.md).  Please make it look nice, maybe with a Material UI look and feel, and be sure to use accessibility features (inert, maybe?).
 
