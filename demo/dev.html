@@ -30,5 +30,10 @@
         <h1>side-burger demo</h1>
         <p>Click the hamburger icon in the top-left corner to open the navigation drawer.</p>
     </main>
+    <script>
+        document.querySelector('side-burger').ownerDocument.addEventListener('keydown', e => {
+            console.log({e});
+        })
+    </script>
 </body>
 </html>

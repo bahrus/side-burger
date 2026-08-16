@@ -26,6 +26,16 @@
                         },
                         "on_click_of_overlay_assign": {
                             "expanded": false
+                        },
+                        "on_keydown_of_ownerDocument_assignFromEvent": {
+                            "?.escapeKeyPressed ?=": [
+                                [
+                                    "?.key",
+                                    "Escape"
+                                ],
+                                true,
+                                false
+                            ]
                         }
                     },
                     "merges": [
@@ -60,7 +70,8 @@
                                     "?.expanded",
                                     false,
                                     true
-                                ]
+                                ],
+                                "?.escapeKeyPressed": false
                             }
                         },
                         {
@@ -72,6 +83,14 @@
                             ],
                             "assign": {
                                 "?.hamburgerButton?.disabled": "?.disabled"
+                            }
+                        },
+                        {
+                            "ifAllOf": [
+                                "escapeKeyPressed"
+                            ],
+                            "assign": {
+                                "expanded": false
                             }
                         }
                     ],

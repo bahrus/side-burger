@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { akaMethods as m } from 'assign-gingerly/DX/emojis.js';
 import { paths, doAssign, set, smoothOver } from 'assign-gingerly/DX/paths.js';
 
-/** @import { EndUserProps, AP } from './types'; */
+/** @import { EndUserProps, AP, Actions } from './types'; */
 /** @import { RoundaboutOptions } from './types/roundabout/types' */
 /** @import { ElMakerConfig } from './types/el-maker/types' */
 
@@ -14,7 +14,7 @@ const withMethods = [m['🔍']];
 const $ = (/** @type {typeof paths<AP>} */ (/** @type {any} */(paths)))({ withMethods });
 
 /**
- * @type {RoundaboutOptions<AP>}
+ * @type {RoundaboutOptions<AP, Actions, AP, 'click' | 'keydown'>}
  */
 const raConfig = {
     weakRef: {
@@ -36,6 +36,9 @@ const raConfig = {
         on_click_of_overlay_assign: {
             expanded: false
         },
+        on_keydown_of_ownerDocument_assignFromEvent: {
+            [$.escapeKeyPressed.QMEq.Path]: [['?.key', 'Escape'], true, false]
+        }
     },
     merges: smoothOver([
         {
@@ -53,7 +56,8 @@ const raConfig = {
                 set($.hamburgerButton.ariaExpanded).to($.expanded),
                 set($.drawer.ariaHidden.QMEq).to([$.expanded, false, true]),
                 set($.overlay.ariaHidden.QMEq).to([$.expanded, false, true]),
-                set($.drawer.inert.QMEq).to([$.expanded, false, true])
+                set($.drawer.inert.QMEq).to([$.expanded, false, true]),
+                set($.escapeKeyPressed).to(false)
             )
         },
         {
@@ -62,6 +66,12 @@ const raConfig = {
             ...doAssign(
                 set($.hamburgerButton.disabled).to($.disabled)
             )
+        },
+        {
+            ifAllOf: ['escapeKeyPressed'],
+            assign: {
+                expanded: false
+            }
         }
     ]),
     defaultPropVals: {

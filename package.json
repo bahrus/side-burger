@@ -24,7 +24,7 @@
   "dependencies": {
     "assign-gingerly": "0.0.81",
     "be-hive": "0.1.16",
-    "el-maker": "0.0.18",
+    "el-maker": "0.0.19",
     "imp-h": "0.0.6",
     "mount-observer": "0.1.51"
   },

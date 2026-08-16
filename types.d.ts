@@ -17,11 +17,13 @@ export interface AllProps extends EndUserProps {
     overlay: HTMLDivElement;
     drawer: HTMLDivElement;
     clone: Element | DocumentFragment | ShadowRoot;
+    readonly ownerDocument: Document;
+    escapeKeyPressed: boolean;
 }
 
 export type AP = AllProps;
 
-export interface RunTimeProps extends AllProps, HTMLElement
+export interface RunTimeProps extends AllProps, HTMLElement {}
 
 export type PAP = Partial<AP>;
 
