@@ -1,6 +1,19 @@
 # side-burger
 
-side drawer custom element triggered by a hamburger menu button typically
+side drawer custom element triggered by a hamburger menu button typically.
+
+```html
+<side-burger imp-h='side-bar/root.html'>
+    <nav>
+        <menu>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </menu>
+    </nav>
+    <script type=precede src="side-bar/el-maker.json"></script>
+</side-burger>
+```
 
 ## Viewing Demos Locally
 
