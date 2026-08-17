@@ -154,6 +154,8 @@ I guess this looks like another candidate for a custom element feature / element
 
 If the focus should be separate, I think that is achievable with the declarative support for assigning, but I will experiment with that and document the solution if confirmed.
 
+** Update ** This [has been done declaratively](../types/NewHTMLFirstCustomElement.md#how-can-i-set-focus-after-a-delay).
+
 > 5. **Drawer position (right vs left).** I only styled the left-side drawer; supporting a `position` property would need additional CSS / attribute wiring.
 
 I need to do a better job of indicating how to configure attribute wiring.  But can you please lay out what the code would need to look like for this feature?
