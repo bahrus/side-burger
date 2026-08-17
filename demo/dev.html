@@ -11,6 +11,13 @@
         import 'imp-h/imp-h.js';
         import 'el-maker/def.js';
     </script>
+    <style>
+        a:focus {
+            outline: 4px solid red !important;
+            outline-offset: 2px !important;
+            background-color: yellow !important;
+        }
+    </style>
 </head>
 <body>
     <be-hive></be-hive>
@@ -31,9 +38,22 @@
         <p>Click the hamburger icon in the top-left corner to open the navigation drawer.</p>
     </main>
     <script>
-        document.querySelector('side-burger').ownerDocument.addEventListener('keydown', e => {
-            console.log({e});
-        })
+        const sideBurger = document.querySelector('side-burger');
+        // setTimeout(() => {
+        //     sideBurger.propagator.addEventListener('expanded', e => {
+        //         console.log(sideBurger.expanded);
+        //         if(sideBurger.expanded){
+        //             console.log('expanded');
+        //             const a = sideBurger.querySelector('a');
+        //             setTimeout(() => {
+        //                 a.focus();
+        //             }, 100);
+                    
+        //         }
+        //     })
+        // }, 2000);
+
     </script>
+
 </body>
 </html>

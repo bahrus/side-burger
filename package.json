@@ -22,11 +22,12 @@
     "build-el-maker": "node --watch el-maker.mjs"
   },
   "dependencies": {
-    "assign-gingerly": "0.0.81",
+    "assign-gingerly": "0.0.82",
     "be-hive": "0.1.16",
     "el-maker": "0.0.19",
     "imp-h": "0.0.6",
-    "mount-observer": "0.1.51"
+    "mount-observer": "0.1.51",
+    "roundabout-lib": "0.0.34"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",

@@ -23,7 +23,8 @@ const raConfig = {
     },
     assignOptions: {
         akaMethods: {
-            '🔍': m['🔍']
+            '🔍': m['🔍'],
+            '😣': m['😣']
         },
     },
     compacts: {
@@ -59,6 +60,16 @@ const raConfig = {
                 set($.drawer.inert.QMEq).to([$.expanded, false, true]),
                 set($.escapeKeyPressed).to(false)
             )
+        },
+        {
+            delay:10,
+            ifAllOf: ['expanded'],
+            assign: {
+                '?.querySelector?.a?.focus|': null
+            }
+            // ...doAssign(
+            //     set($.querySelector('a').focus()).to({}),
+            // )
         },
         {
             ifKeyIn: ['disabled'],

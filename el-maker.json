@@ -14,7 +14,8 @@
                     },
                     "assignOptions": {
                         "akaMethods": {
-                            "🔍": "querySelector"
+                            "🔍": "querySelector",
+                            "😣": "focus"
                         }
                     },
                     "compacts": {
@@ -72,6 +73,15 @@
                                     true
                                 ],
                                 "?.escapeKeyPressed": false
+                            }
+                        },
+                        {
+                            "delay": 10,
+                            "ifAllOf": [
+                                "expanded"
+                            ],
+                            "assign": {
+                                "?.querySelector?.a?.focus|": null
                             }
                         },
                         {
