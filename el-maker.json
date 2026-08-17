@@ -81,7 +81,7 @@
                                 "expanded"
                             ],
                             "assign": {
-                                "?.querySelector?.a?.focus|": null
+                                "?.querySelector?.a?.focus": {}
                             }
                         },
                         {

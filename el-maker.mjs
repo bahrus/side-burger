@@ -5,13 +5,13 @@ import { fileURLToPath } from 'url';
 import { akaMethods as m } from 'assign-gingerly/DX/emojis.js';
 import { paths, doAssign, set, smoothOver } from 'assign-gingerly/DX/paths.js';
 
-/** @import { EndUserProps, AP, Actions } from './types'; */
+/** @import { EndUserProps, AP, Actions, RunTimeProps } from './types'; */
 /** @import { RoundaboutOptions } from './types/roundabout/types' */
 /** @import { ElMakerConfig } from './types/el-maker/types' */
 
 const withMethods = [m['🔍']];
 
-const $ = (/** @type {typeof paths<AP>} */ (/** @type {any} */(paths)))({ withMethods });
+const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
 
 /**
  * @type {RoundaboutOptions<AP, Actions, AP, 'click' | 'keydown'>}
@@ -64,12 +64,9 @@ const raConfig = {
         {
             delay: 10, //milliseconds
             ifAllOf: ['expanded'],
-            assign: {
-                '?.querySelector?.a?.focus|': null
-            }
-            // ...doAssign(
-            //     set($.querySelector('a').focus()).to({}),
-            // )
+            ...doAssign(
+                set($.querySelector('a').focus()).to({}),
+            )
         },
         {
             ifKeyIn: ['disabled'],
