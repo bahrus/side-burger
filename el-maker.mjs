@@ -8,8 +8,17 @@ import { paths, doAssign, set, smoothOver } from 'assign-gingerly/DX/paths.js';
 /** @import { EndUserProps, AP, Actions, RunTimeProps } from './types'; */
 /** @import { RoundaboutOptions } from './types/roundabout/types' */
 /** @import { ElMakerConfig } from './types/el-maker/types' */
+/** @import {AttrPatterns} from './types/assign-gingerly/types.js' */
 
 const withMethods = [m['🔍']];
+
+/**
+ * @type {{ [K in keyof EndUserProps]: K }}
+ */
+const props = {
+    expanded: 'expanded',
+    disabled: 'disabled',
+};
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
 
@@ -29,13 +38,13 @@ const raConfig = {
     },
     compacts: {
         on_click_of_hamburgerButton_assign: {
-            expanded: true
+            [props.expanded]: true
         },
         on_click_of_closeButton_assign: {
-            expanded: false
+            [props.expanded]: false
         },
         on_click_of_overlay_assign: {
-            expanded: false
+            [props.expanded]: false
         },
         on_keydown_of_ownerDocument_assignFromEvent: {
             [$.escapeKeyPressed.QMEq.Path]: [['?.key', 'Escape'], true, false]
@@ -83,10 +92,25 @@ const raConfig = {
         }
     ]),
     defaultPropVals: {
-        expanded: false,
-        disabled: false
+        [props.expanded]: false,
+        [props.disabled]: false
     }
 };
+
+/** @type {AttrPatterns<AP>} */
+const withAttrs = {
+    [props.disabled]: props.disabled,
+    [props.expanded]: props.expanded,
+    _expanded: {
+        instanceOf: 'Boolean',
+        mapsTo: props.expanded
+    },
+    _disabled: {
+        instanceOf: 'Boolean',
+        sourceOfTruth: true,
+        mapsTo: props.disabled
+    }
+}
 
 /** @type {ElMakerConfig<AP>} */
 const features = {
@@ -94,7 +118,8 @@ const features = {
         roundabout: {
             customData: {
                 raConfig
-            }
+            },
+            withAttrs, //TODO: fix Typescript
         },
         templateMaker: {}
     }

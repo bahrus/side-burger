@@ -109,6 +109,19 @@
                         "disabled": false
                     }
                 }
+            },
+            "withAttrs": {
+                "disabled": "disabled",
+                "expanded": "expanded",
+                "_expanded": {
+                    "instanceOf": "Boolean",
+                    "mapsTo": "expanded"
+                },
+                "_disabled": {
+                    "instanceOf": "Boolean",
+                    "sourceOfTruth": true,
+                    "mapsTo": "disabled"
+                }
             }
         },
         "templateMaker": {}
