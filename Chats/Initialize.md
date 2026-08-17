@@ -154,7 +154,7 @@ If the focus should be separate, I think that is achievable with the declarative
 
 > 5. **Drawer position (right vs left).** I only styled the left-side drawer; supporting a `position` property would need additional CSS / attribute wiring.
 
-I need to do a better job of indicating how to configure attribute wiring.  But can you please lay out what the code would need to look like for this feature.
+I need to do a better job of indicating how to configure attribute wiring.  But can you please lay out what the code would need to look like for this feature?
 
 
 
