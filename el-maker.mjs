@@ -62,7 +62,7 @@ const raConfig = {
             )
         },
         {
-            delay:10,
+            delay: 10, //milliseconds
             ifAllOf: ['expanded'],
             assign: {
                 '?.querySelector?.a?.focus|': null
