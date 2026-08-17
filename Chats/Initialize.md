@@ -146,9 +146,19 @@ But I don't think it would get us all the way there anyway, due to the need to b
 
 What is interesting is that Claude added #trapFocus() which appears to align with your point 2 above:
 
-2. **Focus trap.** Keeping focus inside the open drawer (cycle from last focusable element back to the first) is not expressible with the roundabout configs I used.
+> 2. **Focus trap.** Keeping focus inside the open drawer (cycle from last focusable element back to the first) is not expressible with the roundabout configs I used.
 
-I guess this looks like another candidate for a custom element feature / element enhancement.  I think maybe these three methods should be grouped together under one umbrella.  What would you call it?  I'm thinking InertManager?
+I guess this looks like another candidate for a custom element feature / element enhancement.  I think maybe these three methods should be grouped together under one umbrella.  Or should the focus be separate? What would you call it?  I'm thinking InertManager?
+
+If the focus should be separate, I think that is achievable with the declarative support for assigning, but I will experiment with that and document the solution if confirmed.
+
+> 5. **Drawer position (right vs left).** I only styled the left-side drawer; supporting a `position` property would need additional CSS / attribute wiring.
+
+I need to do a better job of indicating how to configure attribute wiring.  But can you please lay out what the code would need to look like for this feature.
+
+
+
+
 
 
 
