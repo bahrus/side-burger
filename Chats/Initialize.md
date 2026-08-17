@@ -64,13 +64,15 @@ So one down and a few more to go.
 
 > 4. **Swipe / drag to close.** Touch gestures need JS event handling.
 
-This is the most interesting / exiting to me.  There does appear a serious need for [a custom element feature / element enhancement that provides for what is called "swipe (to) dismiss"](https://github.com/bahrus/swipe-dismiss).  It's a significant amount of code that appears to be useful across a variety of component types so enhancements / features seem to fit the bill nicely.
+This is the most interesting / exiting one to me.  There does appear a serious need for [a custom element feature / element enhancement that provides for what is called "swipe (to) dismiss"](https://github.com/bahrus/swipe-dismiss).  It's a significant amount of code that appears to be useful across a variety of component types so enhancements / features seem to fit the bill nicely.
+
+I will be working with Kimi on this this week separately, and then incorporate it in when ready.
 
 > 1.  **Inert on the rest of the page.** The drawer can make *itself* `inert`, but making the surrounding page content inert while the drawer is open requires reaching outside the element’s shadow tree. I do not see how to do that with the current el-maker features alone.
 
 I asked Claude what the code should look like to implement:
 
-Claude replied with code to do this, as well as trapping focus, which I assume is your second functionality:
+Claude replied with code to do this:
 
 
 ```JS
@@ -148,7 +150,7 @@ What is interesting is that Claude added #trapFocus() which appears to align wit
 
 > 2. **Focus trap.** Keeping focus inside the open drawer (cycle from last focusable element back to the first) is not expressible with the roundabout configs I used.
 
-I guess this looks like another candidate for a custom element feature / element enhancement.  I think maybe these three methods should be grouped together under one umbrella.  Or should the focus be separate? What would you call it?  I'm thinking InertManager?
+I guess this looks like another candidate for a custom element feature / element enhancement.  Not a very interesting one, but that's okay.  I think maybe these three methods should be grouped together under one umbrella.  Or should the focus be separate? What would you call it?  I'm thinking InertManager?  Would other component types benefit from this functionality?
 
 If the focus should be separate, I think that is achievable with the declarative support for assigning, but I will experiment with that and document the solution if confirmed.
 
@@ -156,16 +158,55 @@ If the focus should be separate, I think that is achievable with the declarative
 
 I need to do a better job of indicating how to configure attribute wiring.  But can you please lay out what the code would need to look like for this feature?
 
+---
 
+## Kimi's Follow-up Thoughts
 
+> Does this align with your thinking of what needs to be implemented?
 
+Yes — the inert logic and focus move are exactly the right pieces. I would tweak the inert walk to be recursive inside the light-DOM root so nested elements aren't left active, and make it restore previously-inert siblings untouched so it does not clobber existing `inert` states set by the page.
 
+> What if the drawer is buried deep in the page? Wouldn't this leave many elements potentially non inert?
 
+Right. Walking only `container.children` is too shallow. I would use a recursive tree walker or `querySelectorAll('*')` within the same light-DOM root to set every non-inert element to `inert`, while still recording only the ones the drawer itself changed. Or even simpler: add `aria-hidden` + `inert` to the page container and wrap the drawer outside that container so it stays unaffected.
 
+> I'm thinking InertManager? Would other component types benefit?
 
+An `InertManager` enhancement makes sense. Dialogs, modals, bottom sheets, and toasts with focus-blocking behavior would reuse it. I would keep focus management separate (or at least in a sibling feature) because focus trap is useful on its own for non-modal focusable containers like tab panels or step wizards.
 
+> Should the focus be separate?
 
+Yes, separate is cleaner. One enhancement to move focus into the drawer and trap it, another to inert the rest of the page. They can be used together or independently, and it avoids over-specializing for modals.
 
+> What would the code need to look like for drawer position (right vs left)?
 
+Add an `EndUserProps` property, e.g.:
 
+```ts
+position: 'start' | 'end';
+```
 
+In `root.html`, swap the inline `left: 0` / `transform: translateX(-100%)` with a CSS attribute selector:
+
+```css
+.drawer {
+    left: 0;
+    transform: translateX(-100%);
+}
+.drawer[end] {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+}
+.drawer[aria-hidden="false"][end] {
+    transform: translateX(0);
+}
+```
+
+Then in `el-maker.mjs`, mirror `position` to an attribute on `.drawer`:
+
+```js
+set($.drawer.positionAttr.?).to($.position)
+```
+
+or use an `QMEq` mapping so `position === 'end'` adds `[end]` and otherwise leaves it off. That keeps it purely declarative and avoids hardcoding directions.
