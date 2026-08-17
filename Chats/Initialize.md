@@ -10,7 +10,7 @@ Don't fret too much about getting everything to work perfectly.  Do not create a
 
 If you find yourself thinking "I'm stumped how to implement this without JavaScript, just add to your implementation notes what functionality needs JavaScript that you don't see how to pull off with the existing "features" of el-maker.  I will take that under advisement, and explore enhancing el-maker's features if so, or utilize / create some custom attribute element enhancements to support the functionality.
 
-Other custom elements are located in the root folder - plus-minus, scratch-bo and time-ticker, in case that helps.
+Other custom elements are located in the root folder - plus-minus, scratch-box and time-ticker, in case that helps.
 
 Please add your implementation notes below.
 
@@ -55,6 +55,106 @@ I did not create any tests or run any commands as requested.
 The web component worked right off the bat!  But it does give some accessibility warnings, as Kimi predicted.
 
 I found that the typescript guidance was inadequate, and corrected that (backfilling to plus-minus).
+
+One of the items I have [documented how to address](../types/NewHTMLFirstCustomElement.md#how-can-i-perform-an-action-when-the-escape-key-is-pressed-somewhere-on-the-document) (after a bug fix) is:
+
+> 3.  **Escape key to close.** I did not find a clean declarative way to listen for `keydown` on the document / drawer and filter for the `Escape` key within the existing el-maker feature set.
+
+So one down and a few more to go.
+
+> 4. **Swipe / drag to close.** Touch gestures need JS event handling.
+
+This is the most interesting / exiting to me.  There does appear a serious need for [a custom element feature / element enhancement that provides for what is called "swipe (to) dismiss"](https://github.com/bahrus/swipe-dismiss).  It's a significant amount of code that appears to be useful across a variety of component types so enhancements / features seem to fit the bill nicely.
+
+> 1.  **Inert on the rest of the page.** The drawer can make *itself* `inert`, but making the surrounding page content inert while the drawer is open requires reaching outside the element’s shadow tree. I do not see how to do that with the current el-maker features alone.
+
+I asked Claude what the code should look like to implement:
+
+Claude replied with code to do this, as well as trapping focus, which I assume is your second functionality:
+
+
+```JS
+class MyDrawer extends HTMLElement {
+  #inertedSiblings = [];
+
+  connectedCallback() {
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: 'open' });
+      this.shadowRoot.innerHTML = `
+        <style>
+          :host { display: none; }
+          :host([open]) { display: block; }
+        </style>
+        <div part="panel">
+          <slot></slot>
+        </div>
+      `;
+    }
+  }
+
+  open() {
+    this.setAttribute('open', '');
+    this.#makeRestOfPageInert();
+    this.#trapFocus();
+  }
+
+  close() {
+    this.removeAttribute('open');
+    this.#restoreInert();
+  }
+
+  #makeRestOfPageInert() {
+    // Walk the light-DOM tree the element actually lives in.
+    // getRootNode() handles the case where the drawer itself
+    // is nested inside another shadow root.
+    const root = this.getRootNode();
+    const container = root instanceof ShadowRoot ? root.host.parentNode : document.body;
+
+    for (const sibling of container.children) {
+      if (sibling === this) continue;
+      if (sibling.hasAttribute('inert')) continue; // already inert, don't touch/restore it
+      sibling.setAttribute('inert', '');
+      this.#inertedSiblings.push(sibling);
+    }
+  }
+
+  #restoreInert() {
+    for (const el of this.#inertedSiblings) {
+      el.removeAttribute('inert');
+    }
+    this.#inertedSiblings = [];
+  }
+
+  #trapFocus() {
+    // move focus into the drawer so inert-ing the rest of the page
+    // doesn't strand focus on a now-inert element
+    const focusable = this.shadowRoot.querySelector('[autofocus], button, [href], input, select, textarea, [tabindex]');
+    (focusable ?? this).focus();
+  }
+}
+
+customElements.define('my-drawer', MyDrawer);
+```
+
+Does this align with your thinking of what needs to be implemented?
+
+I do have some doubts whether the code above is right.  It just goes up to the parent and sets all the other siblings to inert, it looks like.  What if the drawer is buried deep in the page.  Wouldn't this leave many elements potentially non inert?
+
+#makeRestOfPageInert and #restoreInert seem almost achievable with the assignFrom declarative configuration, but not quite.  It makes me think assignTentatively should get more attention.
+
+But I don't think it would get us all the way there anyway, due to the need to be careful about which elements were modified.
+
+What is interesting is that Claude added #trapFocus() which appears to align with your point 2 above:
+
+2. **Focus trap.** Keeping focus inside the open drawer (cycle from last focusable element back to the first) is not expressible with the roundabout configs I used.
+
+I guess this looks like another candidate for a custom element feature / element enhancement.  I think maybe these three methods should be grouped together under one umbrella.  What would you call it?  I'm thinking InertManager?
+
+
+
+
+
+
 
 
 
