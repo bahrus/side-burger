@@ -6,21 +6,74 @@ import { akaMethods as m } from 'assign-gingerly/DX/emojis.js';
 import { paths, doAssign, set, smoothOver } from 'assign-gingerly/DX/paths.js';
 
 /** @import { EndUserProps, AP, Actions, RunTimeProps } from './types'; */
-/** @import { RoundaboutOptions } from './types/roundabout/types' */
+/** @import { RoundaboutOptions, Merges } from './types/roundabout/types' */
 /** @import { ElMakerConfig } from './types/el-maker/types' */
 /** @import {AttrPatterns} from './types/assign-gingerly/types.js' */
 
 const withMethods = [m['🔍']];
 
 /**
- * @type {{ [K in keyof EndUserProps]: K }}
+ * This makes refactoring easier.  Centralize the manual 
+ * correction to one place.
+ * @type {{ [K in keyof AP]: K }}
  */
 const props = {
-    expanded: 'expanded',
+    open: 'open',
     disabled: 'disabled',
+    clone: 'clone',
+    closeButton: 'closeButton',
+    drawer: 'drawer',
+    escapeKeyPressed: 'escapeKeyPressed',
+    hamburgerButton: 'hamburgerButton',
+    overlay: 'overlay',
+    ownerDocument: 'ownerDocument',
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
+
+// kept separate because "smoothOver" destroys typechecking
+/** @type Merges<AP> */
+const merges = [
+    {
+        ifKeyIn: ['clone'],
+        ...doAssign(
+            set($.hamburgerButton).to($.clone.querySelector('[name=hamburger]')),
+            set($.closeButton).to($.clone.querySelector('[name=close]')),
+            set($.overlay).to($.clone.querySelector('[name=overlay]')),
+            set($.drawer).to($.clone.querySelector('[name=drawer]'))
+        )
+    },
+    {
+        ifKeyIn: [props.open],
+        ...doAssign(
+            set($.hamburgerButton.ariaExpanded).to($.open),
+            set($.drawer.ariaHidden.QMEq).to([$.open, false, true]),
+            set($.overlay.ariaHidden.QMEq).to([$.open, false, true]),
+            set($.drawer.inert.QMEq).to([$.open, false, true]),
+            set($.escapeKeyPressed).to(false)
+        )
+    },
+    {
+        delay: 100, //milliseconds
+        ifAllOf: [props.open],
+        ...doAssign(
+            set($.querySelector('a').focus()).to({}),
+        )
+    },
+    {
+        ifKeyIn: ['disabled'],
+        ifAllOf: ['clone'],
+        ...doAssign(
+            set($.hamburgerButton.disabled).to($.disabled)
+        )
+    },
+    {
+        ifAllOf: ['escapeKeyPressed'],
+        assign: {
+            [props.open]: false
+        }
+    }
+];
 
 /**
  * @type {RoundaboutOptions<AP, Actions, AP, 'click' | 'keydown'>}
@@ -38,61 +91,21 @@ const raConfig = {
     },
     compacts: {
         on_click_of_hamburgerButton_assign: {
-            [props.expanded]: true
+            [props.open]: true
         },
         on_click_of_closeButton_assign: {
-            [props.expanded]: false
+            [props.open]: false
         },
         on_click_of_overlay_assign: {
-            [props.expanded]: false
+            [props.open]: false
         },
         on_keydown_of_ownerDocument_assignFromEvent: {
             [$.escapeKeyPressed.QMEq.Path]: [['?.key', 'Escape'], true, false]
         }
     },
-    merges: smoothOver([
-        {
-            ifKeyIn: ['clone'],
-            ...doAssign(
-                set($.hamburgerButton).to($.clone.querySelector('[name=hamburger]')),
-                set($.closeButton).to($.clone.querySelector('[name=close]')),
-                set($.overlay).to($.clone.querySelector('[name=overlay]')),
-                set($.drawer).to($.clone.querySelector('[name=drawer]'))
-            )
-        },
-        {
-            ifKeyIn: ['expanded'],
-            ...doAssign(
-                set($.hamburgerButton.ariaExpanded).to($.expanded),
-                set($.drawer.ariaHidden.QMEq).to([$.expanded, false, true]),
-                set($.overlay.ariaHidden.QMEq).to([$.expanded, false, true]),
-                set($.drawer.inert.QMEq).to([$.expanded, false, true]),
-                set($.escapeKeyPressed).to(false)
-            )
-        },
-        {
-            delay: 10, //milliseconds
-            ifAllOf: ['expanded'],
-            ...doAssign(
-                set($.querySelector('a').focus()).to({}),
-            )
-        },
-        {
-            ifKeyIn: ['disabled'],
-            ifAllOf: ['clone'],
-            ...doAssign(
-                set($.hamburgerButton.disabled).to($.disabled)
-            )
-        },
-        {
-            ifAllOf: ['escapeKeyPressed'],
-            assign: {
-                expanded: false
-            }
-        }
-    ]),
+    merges: smoothOver(merges),
     defaultPropVals: {
-        [props.expanded]: false,
+        [props.open]: false,
         [props.disabled]: false
     }
 };
@@ -100,10 +113,10 @@ const raConfig = {
 /** @type {AttrPatterns<AP>} */
 const withAttrs = {
     [props.disabled]: props.disabled,
-    [props.expanded]: props.expanded,
-    _expanded: {
+    [props.open]: props.open,
+    [`_${props.open}`]: {
         instanceOf: 'Boolean',
-        mapsTo: props.expanded
+        mapsTo: props.open
     },
     _disabled: {
         instanceOf: 'Boolean',

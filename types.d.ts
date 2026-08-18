@@ -4,7 +4,7 @@ export interface EndUserProps {
     /**
      * If true, the navigation drawer is open.
      */
-    expanded: boolean;
+    open: boolean;
     /**
      * If true, the hamburger menu button is disabled.
      */

@@ -20,13 +20,13 @@
                     },
                     "compacts": {
                         "on_click_of_hamburgerButton_assign": {
-                            "expanded": true
+                            "open": true
                         },
                         "on_click_of_closeButton_assign": {
-                            "expanded": false
+                            "open": false
                         },
                         "on_click_of_overlay_assign": {
-                            "expanded": false
+                            "open": false
                         },
                         "on_keydown_of_ownerDocument_assignFromEvent": {
                             "?.escapeKeyPressed ?=": [
@@ -53,22 +53,22 @@
                         },
                         {
                             "ifKeyIn": [
-                                "expanded"
+                                "open"
                             ],
                             "assign": {
-                                "?.hamburgerButton?.ariaExpanded": "?.expanded",
+                                "?.hamburgerButton?.ariaExpanded": "?.open",
                                 "?.drawer?.ariaHidden ?=": [
-                                    "?.expanded",
+                                    "?.open",
                                     false,
                                     true
                                 ],
                                 "?.overlay?.ariaHidden ?=": [
-                                    "?.expanded",
+                                    "?.open",
                                     false,
                                     true
                                 ],
                                 "?.drawer?.inert ?=": [
-                                    "?.expanded",
+                                    "?.open",
                                     false,
                                     true
                                 ],
@@ -76,9 +76,9 @@
                             }
                         },
                         {
-                            "delay": 10,
+                            "delay": 100,
                             "ifAllOf": [
-                                "expanded"
+                                "open"
                             ],
                             "assign": {
                                 "?.querySelector?.a?.focus": {}
@@ -100,22 +100,22 @@
                                 "escapeKeyPressed"
                             ],
                             "assign": {
-                                "expanded": false
+                                "open": false
                             }
                         }
                     ],
                     "defaultPropVals": {
-                        "expanded": false,
+                        "open": false,
                         "disabled": false
                     }
                 }
             },
             "withAttrs": {
                 "disabled": "disabled",
-                "expanded": "expanded",
-                "_expanded": {
+                "open": "open",
+                "_open": {
                     "instanceOf": "Boolean",
-                    "mapsTo": "expanded"
+                    "mapsTo": "open"
                 },
                 "_disabled": {
                     "instanceOf": "Boolean",
