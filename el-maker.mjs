@@ -61,8 +61,8 @@ const merges = [
         )
     },
     {
-        ifKeyIn: ['disabled'],
-        ifAllOf: ['clone'],
+        ifKeyIn: [props.disabled],
+        ifAllOf: [props.clone],
         ...doAssign(
             set($.hamburgerButton.disabled).to($.disabled)
         )
