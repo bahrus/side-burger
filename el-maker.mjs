@@ -80,7 +80,7 @@ const merges = [
  */
 const raConfig = {
     weakRef: {
-        properties: ['hamburgerButton', 'closeButton', 'overlay', 'drawer'],
+        properties: [props.hamburgerButton, props.closeButton, props.overlay, props.drawer],
         logIfCollected: 'warn'
     },
     assignOptions: {
@@ -118,7 +118,7 @@ const withAttrs = {
         instanceOf: 'Boolean',
         mapsTo: props.open
     },
-    _disabled: {
+    [`_${props.disabled}`]: {
         instanceOf: 'Boolean',
         sourceOfTruth: true,
         mapsTo: props.disabled
