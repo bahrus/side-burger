@@ -148,7 +148,6 @@ const withAttrs = {
     },
     [props.inertTarget]: 'inert-target',
     [`_${props.inertTarget}`]: {
-        instanceOf: 'String',
         mapsTo: props.inertTarget,
     }
 }
