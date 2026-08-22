@@ -16,6 +16,12 @@ export interface EndUserProps {
      * inadvertently.
      */
     inertTarget: string;
+
+    /**
+     * Which side of the viewport the drawer slides out from.
+     * @default 'left'
+     */
+    position: 'left' | 'right';
 }
 
 export interface AllProps extends EndUserProps {

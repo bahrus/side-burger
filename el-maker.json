@@ -136,7 +136,8 @@
                     ],
                     "defaultPropVals": {
                         "open": false,
-                        "disabled": false
+                        "disabled": false,
+                        "position": "left"
                     }
                 }
             },
@@ -154,11 +155,17 @@
                 },
                 "inertTarget": "inert-target",
                 "_inertTarget": {
-                    "instanceOf": "String",
                     "mapsTo": "inertTarget"
+                },
+                "position": "position",
+                "_position": {
+                    "sourceOfTruth": true,
+                    "valIfNull": "left",
+                    "mapsTo": "position"
                 }
             }
         },
-        "templateMaker": {}
+        "templateMaker": {},
+        "truthSourcer": {}
     }
 }

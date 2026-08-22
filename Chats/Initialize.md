@@ -216,3 +216,56 @@ or use an `QMEq` mapping so `position === 'end'` adds `[end]` and otherwise leav
 ## Bruce's Update
 
 No need for inert manager.  Can be handled now with [substitutions and weak list references](../types/NewHTMLFirstCustomElement.md#how-can-i-set-externally-specified-elements-to-inert).
+
+## Try Again?
+
+With the updated documentation on creating a new HTMLFirstCustomElement, can you take another stab at resolving:
+
+> What would the code need to look like for drawer position (right vs left)?
+
+I want to see if the updated instructions are clear enough.
+
+## Kimi's implementation Notes
+
+Implemented the `position` prop so the drawer can slide from `left` (default) or `right`.
+
+Changes made:
+
+- `types.d.ts:13-23` — added `position: 'left' | 'right'` to `EndUserProps`.
+- `el-maker.mjs:26` — added `position: 'position'` to the centralized `props` map.
+- `el-maker.mjs:131-133` — added `[props.position]: 'left'` to `defaultPropVals` so the host property is initialized to a non-null string.
+- `el-maker.mjs:153-158` — added `position` to `withAttrs` as a source-of-truth string attribute defaulting to `'left'`:
+  ```js
+  [props.position]: 'position',
+  [`_${props.position}`]: {
+      sourceOfTruth: true,
+      valIfNull: 'left',
+      mapsTo: props.position
+  }
+  ```
+- `root.html:99-107` — added right-side CSS that overrides the off-screen transform:
+  ```css
+  :host([position="right"]) .drawer {
+      left: auto;
+      right: 0;
+      transform: translateX(100%);
+  }
+
+  :host([position="right"]) .drawer[aria-hidden="false"] {
+      transform: translateX(0);
+  }
+  ```
+- `el-maker.json` — regenerated with `node el-maker.mjs`.
+
+Usage:
+```html
+<side-burger position="right" imp-h="side-burger/root.html">
+  ...
+</side-burger>
+```
+
+How it works: `withAttrs` parses the `position` attribute into the host property, defaulting to `'left'`. Because it's marked `sourceOfTruth: true` and `truthSourcer` is enabled, programmatic changes like `sideBurger.position = 'right'` reflect back to the host attribute. The shadow DOM CSS then uses `:host([position="right"])` to anchor the drawer to the right edge and translate it in from `+100%`.
+
+Documentation clarity feedback: the updated instructions are clear enough for this. They cover the three places a new prop has to live (`types.d.ts`, the `props` map, and `withAttrs`), and the `sourceOfTruth` + `defaultPropVals` pattern is visible in the existing `disabled` example. The one thing that isn't spelled out is that pure presentation attributes can be handled entirely in the shadow DOM CSS via `:host([...])` without adding any roundabout `merges` — but that follows naturally once you realize the attribute is on the host. A short note or example of a host-attribute CSS override in `NewHTMLFirstCustomElement.md` would close that gap.
+
+I ran `node el-maker.mjs` successfully, but `npm test` reports no tests exist, so I couldn't exercise the change in a test suite.

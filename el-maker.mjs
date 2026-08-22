@@ -20,6 +20,7 @@ const withMethods = [m['🔍'], m['🧺']];
 const props = {
     open: 'open',
     disabled: 'disabled',
+    position: 'position',
     clone: 'clone',
     closeButton: 'closeButton',
     drawer: 'drawer',
@@ -129,7 +130,8 @@ const raConfig = {
     merges: smoothOver(merges),
     defaultPropVals: {
         [props.open]: false,
-        [props.disabled]: false
+        [props.disabled]: false,
+        [props.position]: 'left'
     }
 };
 
@@ -149,6 +151,12 @@ const withAttrs = {
     [props.inertTarget]: 'inert-target',
     [`_${props.inertTarget}`]: {
         mapsTo: props.inertTarget,
+    },
+    [props.position]: 'position',
+    [`_${props.position}`]: {
+        sourceOfTruth: true,
+        valIfNull: 'left',
+        mapsTo: props.position
     }
 }
 
@@ -161,7 +169,8 @@ const features = {
             },
             withAttrs, //TODO: fix Typescript
         },
-        templateMaker: {}
+        templateMaker: {},
+        truthSourcer: {},
     }
 };
 

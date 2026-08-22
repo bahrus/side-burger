@@ -96,6 +96,16 @@
                     visibility: visible;
                 }
 
+                :host([position="right"]) .drawer {
+                    left: auto;
+                    right: 0;
+                    transform: translateX(100%);
+                }
+
+                :host([position="right"]) .drawer[aria-hidden="false"] {
+                    transform: translateX(0);
+                }
+
                 .overlay[aria-hidden="false"] {
                     opacity: 1;
                     pointer-events: auto;
