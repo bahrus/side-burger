@@ -212,3 +212,7 @@ set($.drawer.positionAttr.?).to($.position)
 ```
 
 or use an `QMEq` mapping so `position === 'end'` adds `[end]` and otherwise leaves it off. That keeps it purely declarative and avoids hardcoding directions.
+
+## Bruce's Update
+
+No need for inert manager.  Can be handled now with [substitutions and weak list references](../types/NewHTMLFirstCustomElement.md#how-can-i-set-externally-specified-elements-to-inert).
