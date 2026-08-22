@@ -22,7 +22,7 @@
 <body>
     <be-hive></be-hive>
 
-    <side-burger imp-h="side-burger/root.html">
+    <side-burger imp-h="side-burger/root.html" inert-target="main" >
         <nav>
             <menu>
                 <li><a href="#home">Home</a></li>
@@ -36,24 +36,12 @@
     <main>
         <h1>side-burger demo</h1>
         <p>Click the hamburger icon in the top-left corner to open the navigation drawer.</p>
+        <div style="display:flex;flex-direction:column-reverse;">
+            <input>
+        </div>
     </main>
-    <script>
-        const sideBurger = document.querySelector('side-burger');
-        // setTimeout(() => {
-        //     sideBurger.propagator.addEventListener('expanded', e => {
-        //         console.log(sideBurger.expanded);
-        //         if(sideBurger.expanded){
-        //             console.log('expanded');
-        //             const a = sideBurger.querySelector('a');
-        //             setTimeout(() => {
-        //                 a.focus();
-        //             }, 100);
-                    
-        //         }
-        //     })
-        // }, 2000);
 
-    </script>
+
 
 </body>
 </html>

@@ -10,12 +10,19 @@
                             "overlay",
                             "drawer"
                         ],
+                        "listProperties": [
+                            "inertTargetElements"
+                        ],
                         "logIfCollected": "warn"
                     },
                     "assignOptions": {
                         "akaMethods": {
                             "🔍": "querySelector",
-                            "😣": "focus"
+                            "😣": "focus",
+                            "🧺": "querySelectorAll"
+                        },
+                        "substitutions": {
+                            "inertTarget": "?.inertTarget"
                         }
                     },
                     "compacts": {
@@ -102,6 +109,29 @@
                             "assign": {
                                 "open": false
                             }
+                        },
+                        {
+                            "ifAllOf": [
+                                "clone",
+                                "inertTarget",
+                                "open"
+                            ],
+                            "assign": {
+                                "inertTargetElements": "?.ownerDocument?.querySelectorAll?.inertTarget",
+                                "?.inertTargetElements?.@each?.inert": true
+                            }
+                        },
+                        {
+                            "ifAllOf": [
+                                "clone",
+                                "inertTarget"
+                            ],
+                            "ifNoneOf": [
+                                "open"
+                            ],
+                            "assign": {
+                                "?.inertTargetElements?.@each?.inert": false
+                            }
                         }
                     ],
                     "defaultPropVals": {
@@ -121,6 +151,11 @@
                     "instanceOf": "Boolean",
                     "sourceOfTruth": true,
                     "mapsTo": "disabled"
+                },
+                "inertTarget": "inert-target",
+                "_inertTarget": {
+                    "instanceOf": "String",
+                    "mapsTo": "inertTarget"
                 }
             }
         },

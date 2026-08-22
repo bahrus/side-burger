@@ -10,7 +10,7 @@ import { paths, doAssign, set, smoothOver } from 'assign-gingerly/DX/paths.js';
 /** @import { ElMakerConfig } from './types/el-maker/types' */
 /** @import {AttrPatterns} from './types/assign-gingerly/types.js' */
 
-const withMethods = [m['🔍']];
+const withMethods = [m['🔍'], m['🧺']];
 
 /**
  * This makes refactoring easier.  Centralize the manual 
@@ -27,6 +27,8 @@ const props = {
     hamburgerButton: 'hamburgerButton',
     overlay: 'overlay',
     ownerDocument: 'ownerDocument',
+    inertTarget: 'inertTarget',
+    inertTargetElements: 'inertTargetElements'
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
@@ -58,6 +60,7 @@ const merges = [
         ifAllOf: [props.open],
         ...doAssign(
             set($.querySelector('a').focus()).to({}),
+            
         )
     },
     {
@@ -72,6 +75,20 @@ const merges = [
         assign: {
             [props.open]: false
         }
+    },
+    {
+        ifAllOf: [props.clone, props.inertTarget, props.open],
+        ...doAssign(
+            set(props.inertTargetElements).to($.ownerDocument.querySelectorAll($.inertTarget)),
+            set($.inertTargetElements.Each.inert).to(true)
+        )
+    },
+    {
+        ifAllOf: [props.clone, props.inertTarget],
+        ifNoneOf: [props.open],
+        ...doAssign(
+            set($.inertTargetElements.Each.inert).to(false)
+        )
     }
 ];
 
@@ -81,13 +98,19 @@ const merges = [
 const raConfig = {
     weakRef: {
         properties: [props.hamburgerButton, props.closeButton, props.overlay, props.drawer],
+        listProperties: [props.inertTargetElements],
         logIfCollected: 'warn'
     },
+    
     assignOptions: {
         akaMethods: {
             '🔍': m['🔍'],
-            '😣': m['😣']
+            '😣': m['😣'],
+            '🧺': m['🧺'],
         },
+        substitutions: {
+            inertTarget: '?.inertTarget'
+        }
     },
     compacts: {
         on_click_of_hamburgerButton_assign: {
@@ -122,6 +145,11 @@ const withAttrs = {
         instanceOf: 'Boolean',
         sourceOfTruth: true,
         mapsTo: props.disabled
+    },
+    [props.inertTarget]: 'inert-target',
+    [`_${props.inertTarget}`]: {
+        instanceOf: 'String',
+        mapsTo: props.inertTarget,
     }
 }
 

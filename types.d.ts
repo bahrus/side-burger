@@ -9,6 +9,13 @@ export interface EndUserProps {
      * If true, the hamburger menu button is disabled.
      */
     disabled: boolean;
+
+    /**
+     * Selector for elements to make inert when drawer is open
+     * include :not([inert]) to avoid reverting the attribute 
+     * inadvertently.
+     */
+    inertTarget: string;
 }
 
 export interface AllProps extends EndUserProps {
@@ -19,6 +26,7 @@ export interface AllProps extends EndUserProps {
     clone: Element | DocumentFragment | ShadowRoot;
     readonly ownerDocument: Document;
     escapeKeyPressed: boolean;
+    inertTargetElements: Element[];
 }
 
 export type AP = AllProps;
