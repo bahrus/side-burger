@@ -166,6 +166,26 @@
             }
         },
         "templateMaker": {},
-        "truthSourcer": {}
+        "truthSourcer": {},
+        "swipeDismiss": {
+            "customData": {},
+            "withAttrs": {
+                "base": "swipe-dismiss",
+                "axis": "${base}-axis",
+                "direction": "${base}-direction",
+                "handleSelector": "${base}-handle",
+                "panelSelector": "${base}-panel",
+                "_distanceThreshold": {
+                    "instanceOf": "Number",
+                    "mapsTo": "distanceThreshold",
+                    "valIfNull": 0.4
+                },
+                "_velocityThreshold": {
+                    "instanceOf": "Number",
+                    "mapsTo": "velocityThreshold",
+                    "valIfNull": 0.5
+                }
+            }
+        }
     }
 }

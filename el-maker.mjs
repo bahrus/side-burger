@@ -160,7 +160,26 @@ const withAttrs = {
     }
 }
 
-/** @type {ElMakerConfig<AP>} */
+/** @type {AttrPatterns<any>} */
+const swipeDismissAttrs = {
+    base: 'swipe-dismiss',
+    axis: '${base}-axis',
+    direction: '${base}-direction',
+    handleSelector: '${base}-handle',
+    panelSelector: '${base}-panel',
+    _distanceThreshold: {
+        instanceOf: 'Number',
+        mapsTo: 'distanceThreshold',
+        valIfNull: 0.4
+    },
+    _velocityThreshold: {
+        instanceOf: 'Number',
+        mapsTo: 'velocityThreshold',
+        valIfNull: 0.5
+    }
+};
+
+/** @type {ElMakerConfig<AP> & { assignFeatures: { swipeDismiss?: { customData?: any, withAttrs?: import('./types/assign-gingerly/types.js').AttrPatterns<any> } } }} */
 const features = {
     assignFeatures: {
         roundabout: {
@@ -171,6 +190,10 @@ const features = {
         },
         templateMaker: {},
         truthSourcer: {},
+        swipeDismiss: {
+            customData: {},
+            withAttrs: swipeDismissAttrs,
+        }
     }
 };
 

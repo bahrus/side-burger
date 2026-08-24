@@ -89,6 +89,30 @@
                     z-index: 1000;
                     display: flex;
                     flex-direction: column;
+                    touch-action: none;
+                }
+
+                .drawer[data-dragging] {
+                    transition: none;
+                }
+
+                .drag-handle {
+                    position: absolute;
+                    left: -12px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 12px;
+                    height: 48px;
+                    background: rgba(0, 0, 0, 0.2);
+                    border-radius: 6px 0 0 6px;
+                    cursor: grab;
+                    touch-action: none;
+                }
+
+                :host([position="right"]) .drag-handle {
+                    left: auto;
+                    right: -12px;
+                    border-radius: 0 6px 6px 0;
                 }
 
                 .drawer[aria-hidden="false"] {
@@ -207,6 +231,7 @@
                 aria-labelledby="drawer-title"
                 aria-hidden="true"
                 inert>
+                <div class="drag-handle" part="drag-handle" aria-hidden="true"></div>
                 <div class="drawer-header" part="drawer-header">
                     <h2 id="drawer-title" class="drawer-title" part="drawer-title">Menu</h2>
                     <button
