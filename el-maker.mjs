@@ -38,14 +38,21 @@ const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths))
 /** @type Merges<AP> */
 const merges = [
     {
-        ifKeyIn: ['clone'],
+        ifAllOf: ['clone'],
         ...doAssign(
             set($.hamburgerButton).to($.clone.querySelector('[name=hamburger]')),
             set($.closeButton).to($.clone.querySelector('[name=close]')),
             set($.overlay).to($.clone.querySelector('[name=overlay]')),
-            set($.drawer).to($.clone.querySelector('[name=drawer]'))
+            set($.drawer).to($.clone.querySelector('#drawer')),
+            
         )
     },
+    {
+        ifAllOf: ['drawer'],
+        ...doAssign(
+            set($.swipeDismiss.handle).to($.drawer),
+        )
+    },  
     {
         ifKeyIn: [props.open],
         ...doAssign(
@@ -165,17 +172,54 @@ const swipeDismissAttrs = {
     base: 'swipe-dismiss',
     axis: '${base}-axis',
     direction: '${base}-direction',
-    handleSelector: '${base}-handle',
-    panelSelector: '${base}-panel',
+    // handleSelector: '${base}-handle',
+    // _handleSelector: {
+    //     mapsTo: 'handleSelector',
+    //     valIfNull: null
+    // },
+    // panelSelector: '${base}-panel',
+    // _panelSelector: {
+    //     mapsTo: 'panelSelector',
+    //     valIfNull: '[name=drawer]'
+    // },
+    distanceThreshold: '${base}-distance-threshold',
     _distanceThreshold: {
         instanceOf: 'Number',
         mapsTo: 'distanceThreshold',
         valIfNull: 0.4
     },
+    velocityThreshold: '${base}-velocity-threshold',
     _velocityThreshold: {
         instanceOf: 'Number',
         mapsTo: 'velocityThreshold',
         valIfNull: 0.5
+    }
+};
+
+/** @type {any} */
+const swipeDismissCustomData = {
+    assign: {
+        onProgress: {
+            '?.shadowRoot?.querySelector?.#drawer?.style?.transition': 'none',
+            '?.shadowRoot?.querySelector?.#drawer?.style?.transform =>': {
+                do: 'builtIns.join',
+                get: {
+                    value: ['translateX(', '?.progressState?.deltaPx', 'px)']
+                }
+            }
+        },
+        onCommit: {
+            '?.open': false,
+            '?.shadowRoot?.querySelector?.#drawer?.style?.transform': '',
+            '?.shadowRoot?.querySelector?.#drawer?.style?.transition': ''
+        },
+        onCancel: {
+            '?.shadowRoot?.querySelector?.#drawer?.style?.transform': '',
+            '?.shadowRoot?.querySelector?.#drawer?.style?.transition': ''
+        }
+    },
+    assignOptions: {
+        withMethods: ['querySelector']
     }
 };
 
@@ -191,7 +235,7 @@ const features = {
         templateMaker: {},
         truthSourcer: {},
         swipeDismiss: {
-            customData: {},
+            customData: swipeDismissCustomData,
             withAttrs: swipeDismissAttrs,
         }
     }

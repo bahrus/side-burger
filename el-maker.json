@@ -48,14 +48,22 @@
                     },
                     "merges": [
                         {
-                            "ifKeyIn": [
+                            "ifAllOf": [
                                 "clone"
                             ],
                             "assign": {
                                 "?.hamburgerButton": "?.clone?.querySelector?.[name=hamburger]",
                                 "?.closeButton": "?.clone?.querySelector?.[name=close]",
                                 "?.overlay": "?.clone?.querySelector?.[name=overlay]",
-                                "?.drawer": "?.clone?.querySelector?.[name=drawer]"
+                                "?.drawer": "?.clone?.querySelector?.#drawer"
+                            }
+                        },
+                        {
+                            "ifAllOf": [
+                                "drawer"
+                            ],
+                            "assign": {
+                                "?.swipeDismiss?.handle": "?.drawer"
                             }
                         },
                         {
@@ -168,18 +176,48 @@
         "templateMaker": {},
         "truthSourcer": {},
         "swipeDismiss": {
-            "customData": {},
+            "customData": {
+                "assign": {
+                    "onProgress": {
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.transition": "none",
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.transform =>": {
+                            "do": "builtIns.join",
+                            "get": {
+                                "value": [
+                                    "translateX(",
+                                    "?.progressState?.deltaPx",
+                                    "px)"
+                                ]
+                            }
+                        }
+                    },
+                    "onCommit": {
+                        "?.open": false,
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.transform": "",
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.transition": ""
+                    },
+                    "onCancel": {
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.transform": "",
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.transition": ""
+                    }
+                },
+                "assignOptions": {
+                    "withMethods": [
+                        "querySelector"
+                    ]
+                }
+            },
             "withAttrs": {
                 "base": "swipe-dismiss",
                 "axis": "${base}-axis",
                 "direction": "${base}-direction",
-                "handleSelector": "${base}-handle",
-                "panelSelector": "${base}-panel",
+                "distanceThreshold": "${base}-distance-threshold",
                 "_distanceThreshold": {
                     "instanceOf": "Number",
                     "mapsTo": "distanceThreshold",
                     "valIfNull": 0.4
                 },
+                "velocityThreshold": "${base}-velocity-threshold",
                 "_velocityThreshold": {
                     "instanceOf": "Number",
                     "mapsTo": "velocityThreshold",
