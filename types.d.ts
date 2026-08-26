@@ -1,5 +1,5 @@
 import {SimpleWCInfo} from './types/wc-info/SimpleWCInfo';
-import {SwipeDismissProps} from './types/swipe-dismiss/types';
+import {} from './types/swipe-dismiss/types';
 
 export interface EndUserProps {
     /**
@@ -34,7 +34,7 @@ export interface AllProps extends EndUserProps {
     readonly ownerDocument: Document;
     escapeKeyPressed: boolean;
     inertTargetElements: Element[];
-    swipeDismiss: SwipeDismissProps;
+    swipeDismiss: Props;
 }
 
 export type AP = AllProps;
