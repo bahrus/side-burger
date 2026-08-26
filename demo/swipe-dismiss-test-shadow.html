@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Swipe-to-Dismiss Test (Shadow DOM, Left Edge)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1b1f24;
+    color: #e8eaed;
+  }
+  #instructions {
+    padding: 24px;
+    max-width: 480px;
+  }
+  #instructions h1 { font-size: 20px; margin: 0 0 12px; }
+  #instructions p { font-size: 14px; line-height: 1.5; color: #a9b0b8; margin: 0 0 8px; }
+  #instructions code { background: #2a2f36; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+  #open-btn {
+    margin: 8px 24px; padding: 10px 16px; background: #4a8bfc; color: white;
+    border: none; border-radius: 6px; font-size: 15px; cursor: pointer;
+  }
+  #open-btn:active { background: #3a7bec; }
+  #debug {
+    margin: 16px 24px; padding: 12px 14px; background: #14171b; border: 1px solid #2a2f36;
+    border-radius: 6px; font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 13px;
+    line-height: 1.7; white-space: pre; color: #8fd694; max-width: 480px;
+  }
+  #debug .label { color: #6b7280; }
+  shadow-drawer-host { display: block; }
+</style>
+</head>
+<body>
+
+<div id="instructions">
+  <h1>Swipe-to-Dismiss Test (Shadow DOM, Left Edge)</h1>
+  <p>Same controller and math as <code>swipe-dismiss-test-left.html</code>, but the drawer is rendered inside an actual <code>shadowrootmode="open"</code> shadow root, like the real side-burger component. Isolates whether the shadow boundary itself affects touch event delivery.</p>
+  <p>Tap <strong>Open Drawer</strong>, then drag the panel to the <strong>left</strong> to dismiss it.</p>
+</div>
+
+<button id="open-btn">Open Drawer</button>
+
+<div id="debug">
+<span class="label">status:</span>    <span id="dbg-status">idle</span>
+<span class="label">delta:</span>     <span id="dbg-delta">0</span> px
+<span class="label">fraction:</span>  <span id="dbg-fraction">0.00</span>
+<span class="label">last event:</span> <span id="dbg-last">-</span>
+</div>
+
+<shadow-drawer-host>
+  <template shadowrootmode="open">
+    <style>
+      :host { display: block; }
+      #drawer-host { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+      #scrim {
+        position: absolute; inset: 0; background: rgba(0,0,0,0.45);
+        opacity: 0; transition: opacity 0.25s ease;
+      }
+      #drawer-host[data-open] #scrim { opacity: 1; pointer-events: auto; }
+      #drawer {
+        position: absolute; top: 0; left: 0; height: 100%; width: 320px; max-width: 85vw;
+        background: #262b33; border-right: 1px solid #363c46;
+        box-shadow: 8px 0 24px rgba(0,0,0,0.35); padding: 20px;
+        translate: -100% 0; touch-action: none; pointer-events: none;
+      }
+      #drawer-host[data-open] #drawer { translate: var(--drag-x, 0) 0; pointer-events: auto; }
+      #drawer:not([data-dragging]) { transition: translate 0.25s ease; }
+      #drawer h2 { font-size: 16px; margin: 0 0 12px; }
+      #drawer p { font-size: 13px; color: #a9b0b8; line-height: 1.5; }
+    </style>
+    <div id="drawer-host">
+      <div id="scrim"></div>
+      <div id="drawer">
+        <h2>Shadow Test Drawer</h2>
+        <p>Drag me left to dismiss. Rendered inside a shadow root.</p>
+      </div>
+    </div>
+  </template>
+</shadow-drawer-host>
+
+<script>
+class SwipeDismissController {
+  #getHandle; #getPanel; #axis; #direction;
+  #distanceThreshold; #velocityThreshold;
+  #onProgress; #onCommit; #onCancel; #onEvent;
+  #dragState = null; #handleEl = null;
+
+  constructor(opts) {
+    this.#getHandle = opts.handle;
+    this.#getPanel = opts.panel || opts.handle;
+    this.#axis = opts.axis || 'x';
+    this.#direction = opts.direction ?? 1;
+    this.#distanceThreshold = opts.distanceThreshold ?? 0.4;
+    this.#velocityThreshold = opts.velocityThreshold ?? 0.5;
+    this.#onProgress = opts.onProgress;
+    this.#onCommit = opts.onCommit;
+    this.#onCancel = opts.onCancel;
+    this.#onEvent = opts.onEvent;
+  }
+
+  connect() {
+    this.#handleEl = this.#getHandle();
+    this.#handleEl.addEventListener('pointerdown', this.#onPointerDown);
+  }
+
+  #onPointerDown = (event) => {
+    const panelEl = this.#getPanel();
+    const rect = panelEl.getBoundingClientRect();
+    this.#dragState = {
+      pointerId: event.pointerId,
+      start: this.#axis === 'x' ? event.clientX : event.clientY,
+      startTime: performance.now(),
+      size: this.#axis === 'x' ? rect.width : rect.height,
+    };
+    this.#handleEl.setPointerCapture(event.pointerId);
+    this.#handleEl.addEventListener('pointermove', this.#onPointerMove);
+    this.#handleEl.addEventListener('pointerup', this.#onPointerUp);
+    this.#handleEl.addEventListener('pointercancel', this.#onPointerUp);
+    console.log('[ShadowTest] pointerdown', { clientX: event.clientX, pointerId: event.pointerId });
+    this.#onEvent?.('pointerdown', { type: event.pointerType });
+  };
+
+  #onPointerMove = (event) => {
+    const state = this.#dragState;
+    if (!state || event.pointerId !== state.pointerId) return;
+    const current = this.#axis === 'x' ? event.clientX : event.clientY;
+    const raw = (current - state.start) * this.#direction;
+    const clamped = Math.max(0, raw);
+    console.log('[ShadowTest] pointermove', { clientX: event.clientX, raw, clamped });
+    this.#onProgress?.(clamped, clamped / state.size);
+    this.#onEvent?.('pointermove', { type: event.pointerType });
+  };
+
+  #onPointerUp = (event) => {
+    const state = this.#dragState;
+    if (!state || event.pointerId !== state.pointerId) return;
+    this.#handleEl.releasePointerCapture(event.pointerId);
+    this.#handleEl.removeEventListener('pointermove', this.#onPointerMove);
+    this.#handleEl.removeEventListener('pointerup', this.#onPointerUp);
+    this.#handleEl.removeEventListener('pointercancel', this.#onPointerUp);
+
+    const current = this.#axis === 'x' ? event.clientX : event.clientY;
+    const delta = Math.max(0, (current - state.start) * this.#direction);
+    const elapsed = Math.max(1, performance.now() - state.startTime);
+    const velocity = delta / elapsed;
+    this.#dragState = null;
+
+    const committed = delta > state.size * this.#distanceThreshold || velocity > this.#velocityThreshold;
+    console.log('[ShadowTest] ' + event.type, { clientX: event.clientX, delta, velocity, committed });
+    this.#onEvent?.(committed ? 'commit' : 'cancel', { type: event.pointerType, delta, velocity });
+
+    if (committed) this.#onCommit?.();
+    else this.#onCancel?.();
+  };
+}
+
+const hostEl = document.querySelector('shadow-drawer-host');
+const root = hostEl.shadowRoot;
+const drawerHost = root.getElementById('drawer-host');
+const drawer = root.getElementById('drawer');
+const scrim = root.getElementById('scrim');
+const openBtn = document.getElementById('open-btn');
+
+const dbgStatus = document.getElementById('dbg-status');
+const dbgDelta = document.getElementById('dbg-delta');
+const dbgFraction = document.getElementById('dbg-fraction');
+const dbgLast = document.getElementById('dbg-last');
+
+function openDrawer() {
+  drawerHost.setAttribute('data-open', '');
+  dbgStatus.textContent = 'open';
+}
+function closeDrawer() {
+  drawerHost.removeAttribute('data-open');
+  drawer.style.removeProperty('--drag-x');
+  drawer.removeAttribute('data-dragging');
+  dbgStatus.textContent = 'closed';
+  dbgDelta.textContent = '0';
+  dbgFraction.textContent = '0.00';
+}
+
+const swipe = new SwipeDismissController({
+  handle: () => drawer,
+  panel: () => drawer,
+  axis: 'x',
+  direction: -1,
+  onProgress: (deltaPx, fraction) => {
+    drawer.style.setProperty('--drag-x', `${-deltaPx}px`);
+    drawer.setAttribute('data-dragging', '');
+    dbgStatus.textContent = 'dragging';
+    dbgDelta.textContent = deltaPx.toFixed(1);
+    dbgFraction.textContent = fraction.toFixed(2);
+  },
+  onCommit: () => { dbgStatus.textContent = 'committed → closing'; closeDrawer(); },
+  onCancel: () => {
+    drawer.removeAttribute('data-dragging');
+    drawer.style.removeProperty('--drag-x');
+    dbgStatus.textContent = 'cancelled → snapped back';
+    dbgDelta.textContent = '0';
+    dbgFraction.textContent = '0.00';
+  },
+  onEvent: (name, info) => { dbgLast.textContent = `${name} (${info.type ?? '-'})`; },
+});
+swipe.connect();
+
+openBtn.addEventListener('click', openDrawer);
+scrim.addEventListener('click', closeDrawer);
+</script>
+
+</body>
+</html>

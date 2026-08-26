@@ -63,7 +63,16 @@
                                 "drawer"
                             ],
                             "assign": {
-                                "?.swipeDismiss?.handle": "?.drawer"
+                                "?.swipeDismiss?.handle": "?.drawer",
+                                "?.swipeDismiss?.panel": "?.drawer",
+                                "?.swipeDismiss?.direction ?=": [
+                                    [
+                                        "?.position",
+                                        "right"
+                                    ],
+                                    1,
+                                    -1
+                                ]
                             }
                         },
                         {
@@ -180,24 +189,21 @@
                 "assign": {
                     "onProgress": {
                         "?.shadowRoot?.querySelector?.#drawer?.style?.transition": "none",
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.transform =>": {
-                            "do": "builtIns.join",
-                            "get": {
-                                "value": [
-                                    "translateX(",
-                                    "?.progressState?.deltaPx",
-                                    "px)"
-                                ]
-                            }
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.clipPath =&": {
+                            "join": [
+                                "inset(0 ",
+                                "?.progressState?.deltaPx",
+                                "px 0 0)"
+                            ]
                         }
                     },
                     "onCommit": {
                         "?.open": false,
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.transform": "",
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.clipPath": "",
                         "?.shadowRoot?.querySelector?.#drawer?.style?.transition": ""
                     },
                     "onCancel": {
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.transform": "",
+                        "?.shadowRoot?.querySelector?.#drawer?.style?.clipPath": "",
                         "?.shadowRoot?.querySelector?.#drawer?.style?.transition": ""
                     }
                 },

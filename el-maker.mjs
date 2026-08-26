@@ -29,7 +29,8 @@ const props = {
     overlay: 'overlay',
     ownerDocument: 'ownerDocument',
     inertTarget: 'inertTarget',
-    inertTargetElements: 'inertTargetElements'
+    inertTargetElements: 'inertTargetElements',
+    swipeDismiss: 'swipeDismiss',
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
@@ -51,8 +52,10 @@ const merges = [
         ifAllOf: ['drawer'],
         ...doAssign(
             set($.swipeDismiss.handle).to($.drawer),
+            set($.swipeDismiss.panel).to($.drawer),
+            set($.swipeDismiss.direction.QMEq).to([[$.position, 'right'], 1, -1])
         )
-    },  
+    },
     {
         ifKeyIn: [props.open],
         ...doAssign(
@@ -201,20 +204,17 @@ const swipeDismissCustomData = {
     assign: {
         onProgress: {
             '?.shadowRoot?.querySelector?.#drawer?.style?.transition': 'none',
-            '?.shadowRoot?.querySelector?.#drawer?.style?.transform =>': {
-                do: 'builtIns.join',
-                get: {
-                    value: ['translateX(', '?.progressState?.deltaPx', 'px)']
-                }
+            '?.shadowRoot?.querySelector?.#drawer?.style?.clipPath =&': {
+                join: ['inset(0 ', '?.progressState?.deltaPx', 'px 0 0)']
             }
         },
         onCommit: {
             '?.open': false,
-            '?.shadowRoot?.querySelector?.#drawer?.style?.transform': '',
+            '?.shadowRoot?.querySelector?.#drawer?.style?.clipPath': '',
             '?.shadowRoot?.querySelector?.#drawer?.style?.transition': ''
         },
         onCancel: {
-            '?.shadowRoot?.querySelector?.#drawer?.style?.transform': '',
+            '?.shadowRoot?.querySelector?.#drawer?.style?.clipPath': '',
             '?.shadowRoot?.querySelector?.#drawer?.style?.transition': ''
         }
     },
