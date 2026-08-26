@@ -22,7 +22,7 @@
     "build-el-maker": "node --watch el-maker.mjs"
   },
   "dependencies": {
-    "assign-gingerly": "0.0.86",
+    "assign-gingerly": "0.0.87",
     "be-hive": "0.1.16",
     "el-maker": "0.0.22",
     "imp-h": "0.0.6",

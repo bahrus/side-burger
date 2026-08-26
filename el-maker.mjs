@@ -3,7 +3,7 @@
 import { writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { akaMethods as m } from 'assign-gingerly/DX/emojis.js';
-import { paths, doAssign, set, smoothOver } from 'assign-gingerly/DX/paths.js';
+import { paths, doAssign, set, smoothOver, assign } from 'assign-gingerly/DX/paths.js';
 
 /** @import { EndUserProps, AP, Actions, RunTimeProps } from './types'; */
 /** @import { RoundaboutOptions, Merges } from './types/roundabout/types' */
@@ -193,15 +193,19 @@ const swipeDismissAttrs = {
 const swipeDismissCustomData = {
     assign: {
         onProgress: {
-            [$.drawer.style.transition.Path]: 'none',
-            [`${$.drawer.style.clipPath.Path} =&`]: {
-                join: ['inset(0 ', '?.progressState?.deltaPx', 'px 0 0)']
-            }
+            ...assign(
+                set($.drawer.style.transition).to('none'),
+                set($.drawer.style.clipPath.EqAmp).to({
+                    join: ['inset(0 ', '?.progressState?.deltaPx', 'px 0 0)']
+                })
+            )
         },
         onCommit: {
-            '?.open': false,
-            [$.drawer.style.clipPath.Path]: '',
-            [$.drawer.style.transition.Path]: '',
+            ...assign(
+                set($.open).to(false),
+                set($.drawer.style.clipPath).to(''),
+                set($.drawer.style.transition).to('')
+            )
         },
         onCancel: {
             [$.drawer.style.clipPath.Path]: '',
