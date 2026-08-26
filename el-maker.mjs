@@ -208,8 +208,10 @@ const swipeDismissCustomData = {
             )
         },
         onCancel: {
-            [$.drawer.style.clipPath.Path]: '',
-            [$.drawer.style.transition.Path]: ''
+            ...assign(
+                set($.drawer.style.clipPath).to(''),
+                set($.drawer.style.transition).to('')
+            )
         }
     },
     assignOptions: {
