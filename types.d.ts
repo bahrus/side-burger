@@ -1,5 +1,5 @@
 import {SimpleWCInfo} from './types/wc-info/SimpleWCInfo';
-import {} from './types/swipe-dismiss/types';
+import {SwipeDismissProps} from './types/swipe-dismiss/types';
 
 export interface EndUserProps {
     /**

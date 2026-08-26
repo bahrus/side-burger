@@ -188,8 +188,8 @@
             "customData": {
                 "assign": {
                     "onProgress": {
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.transition": "none",
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.clipPath =&": {
+                        "?.drawer?.style?.transition": "none",
+                        "?.drawer?.style?.clipPath =&": {
                             "join": [
                                 "inset(0 ",
                                 "?.progressState?.deltaPx",
@@ -199,12 +199,12 @@
                     },
                     "onCommit": {
                         "?.open": false,
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.clipPath": "",
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.transition": ""
+                        "?.drawer?.style?.clipPath": "",
+                        "?.drawer?.style?.transition": ""
                     },
                     "onCancel": {
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.clipPath": "",
-                        "?.shadowRoot?.querySelector?.#drawer?.style?.transition": ""
+                        "?.drawer?.style?.clipPath": "",
+                        "?.drawer?.style?.transition": ""
                     }
                 },
                 "assignOptions": {

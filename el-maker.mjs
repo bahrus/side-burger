@@ -175,16 +175,6 @@ const swipeDismissAttrs = {
     base: 'swipe-dismiss',
     axis: '${base}-axis',
     direction: '${base}-direction',
-    // handleSelector: '${base}-handle',
-    // _handleSelector: {
-    //     mapsTo: 'handleSelector',
-    //     valIfNull: null
-    // },
-    // panelSelector: '${base}-panel',
-    // _panelSelector: {
-    //     mapsTo: 'panelSelector',
-    //     valIfNull: '[name=drawer]'
-    // },
     distanceThreshold: '${base}-distance-threshold',
     _distanceThreshold: {
         instanceOf: 'Number',
@@ -203,19 +193,19 @@ const swipeDismissAttrs = {
 const swipeDismissCustomData = {
     assign: {
         onProgress: {
-            '?.shadowRoot?.querySelector?.#drawer?.style?.transition': 'none',
-            '?.shadowRoot?.querySelector?.#drawer?.style?.clipPath =&': {
+            [$.drawer.style.transition.Path]: 'none',
+            [`${$.drawer.style.clipPath.Path} =&`]: {
                 join: ['inset(0 ', '?.progressState?.deltaPx', 'px 0 0)']
             }
         },
         onCommit: {
             '?.open': false,
-            '?.shadowRoot?.querySelector?.#drawer?.style?.clipPath': '',
-            '?.shadowRoot?.querySelector?.#drawer?.style?.transition': ''
+            [$.drawer.style.clipPath.Path]: '',
+            [$.drawer.style.transition.Path]: '',
         },
         onCancel: {
-            '?.shadowRoot?.querySelector?.#drawer?.style?.clipPath': '',
-            '?.shadowRoot?.querySelector?.#drawer?.style?.transition': ''
+            [$.drawer.style.clipPath.Path]: '',
+            [$.drawer.style.transition.Path]: ''
         }
     },
     assignOptions: {
