@@ -81,11 +81,6 @@
                             ],
                             "assign": {
                                 "?.hamburgerButton?.ariaExpanded": "?.open",
-                                "?.drawer?.ariaHidden ?=": [
-                                    "?.open",
-                                    false,
-                                    true
-                                ],
                                 "?.overlay?.ariaHidden ?=": [
                                     "?.open",
                                     false,
@@ -189,21 +184,21 @@
                 "assign": {
                     "onProgress": {
                         "?.drawer?.style?.transition": "none",
-                        "?.drawer?.style?.clipPath =&": {
+                        "?.drawer?.style?.transform =&": {
                             "join": [
-                                "inset(0 ",
-                                "?.progressState?.deltaPx",
-                                "px 0 0)"
+                                "translateX(",
+                                "?.progressState?.translatePx",
+                                "px)"
                             ]
                         }
                     },
                     "onCommit": {
                         "?.open": false,
-                        "?.drawer?.style?.clipPath": "",
+                        "?.drawer?.style?.transform": "",
                         "?.drawer?.style?.transition": ""
                     },
                     "onCancel": {
-                        "?.drawer?.style?.clipPath": "",
+                        "?.drawer?.style?.transform": "",
                         "?.drawer?.style?.transition": ""
                     }
                 },

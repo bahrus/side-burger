@@ -60,7 +60,11 @@ const merges = [
         ifKeyIn: [props.open],
         ...doAssign(
             set($.hamburgerButton.ariaExpanded).to($.open),
-            set($.drawer.ariaHidden.QMEq).to([$.open, false, true]),
+            // The drawer is hidden from AT via `inert` only. `aria-hidden` on a
+            // container that can hold focus is a spec violation (Chromium/Edge
+            // logs "Blocked aria-hidden ... descendant retained focus") — `inert`
+            // both hides it and pulls focus out. Open/closed CSS keys off
+            // `.drawer:not([inert])` instead of `[aria-hidden="false"]`.
             set($.overlay.ariaHidden.QMEq).to([$.open, false, true]),
             set($.drawer.inert.QMEq).to([$.open, false, true]),
             set($.escapeKeyPressed).to(false)
@@ -192,24 +196,29 @@ const swipeDismissAttrs = {
 /** @type {any} */
 const swipeDismissCustomData = {
     assign: {
+        // Follow the finger with a compositor-only `transform` (no per-frame
+        // paint), matching demo/swipe-dismiss-test.html. The previous
+        // `clip-path: inset(...)` repainted the drawer + its multi-layer
+        // box-shadow every pointermove, which is what made dev.html janky.
+        // `translatePx` is already signed for the drawer's edge.
         onProgress: {
             ...assign(
                 set($.drawer.style.transition).to('none'),
-                set($.drawer.style.clipPath.EqAmp).to({
-                    join: ['inset(0 ', '?.progressState?.deltaPx', 'px 0 0)']
+                set($.drawer.style.transform.EqAmp).to({
+                    join: ['translateX(', '?.progressState?.translatePx', 'px)']
                 })
             )
         },
         onCommit: {
             ...assign(
                 set($.open).to(false),
-                set($.drawer.style.clipPath).to(''),
+                set($.drawer.style.transform).to(''),
                 set($.drawer.style.transition).to('')
             )
         },
         onCancel: {
             ...assign(
-                set($.drawer.style.clipPath).to(''),
+                set($.drawer.style.transform).to(''),
                 set($.drawer.style.transition).to('')
             )
         }
