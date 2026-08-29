@@ -31,6 +31,7 @@ const props = {
     inertTarget: 'inertTarget',
     inertTargetElements: 'inertTargetElements',
     swipeDismiss: 'swipeDismiss',
+    openLabel: 'openLabel',
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
@@ -41,7 +42,10 @@ const merges = [
     {
         ifAllOf: ['clone'],
         ...doAssign(
-            set($.hamburgerButton).to($.clone.querySelector('[name=hamburger]')),
+            // `button[name=hamburger]`, not `[name=hamburger]`: the customizable
+            // <slot name="hamburger"> inside the button also carries
+            // name="hamburger", so the bare attribute selector is ambiguous.
+            set($.hamburgerButton).to($.clone.querySelector('button[name=hamburger]')),
             set($.closeButton).to($.clone.querySelector('[name=close]')),
             set($.overlay).to($.clone.querySelector('[name=overlay]')),
             set($.drawer).to($.clone.querySelector('#drawer')),
@@ -54,6 +58,15 @@ const merges = [
             set($.swipeDismiss.handle).to($.drawer),
             set($.swipeDismiss.panel).to($.drawer),
             set($.swipeDismiss.direction.QMEq).to([[$.position, 'right'], 1, -1])
+        )
+    },
+    {
+        // Accessible name for the menu button. `aria-label` wins over slotted
+        // content, so this is exposed as the `open-label` attribute for
+        // consumers who slot visible text and need the names to match.
+        ifAllOf: [props.hamburgerButton, props.openLabel],
+        ...doAssign(
+            set($.hamburgerButton.ariaLabel).to($.openLabel)
         )
     },
     {
@@ -145,7 +158,8 @@ const raConfig = {
     defaultPropVals: {
         [props.open]: false,
         [props.disabled]: false,
-        [props.position]: 'left'
+        [props.position]: 'left',
+        [props.openLabel]: 'Open navigation menu'
     }
 };
 
@@ -171,6 +185,11 @@ const withAttrs = {
         sourceOfTruth: true,
         valIfNull: 'left',
         mapsTo: props.position
+    },
+    [props.openLabel]: 'open-label',
+    [`_${props.openLabel}`]: {
+        valIfNull: 'Open navigation menu',
+        mapsTo: props.openLabel
     }
 }
 

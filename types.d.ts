@@ -23,6 +23,14 @@ export interface EndUserProps {
      * @default 'left'
      */
     position: 'left' | 'right';
+
+    /**
+     * Accessible name for the menu button, applied as its `aria-label`.
+     * `aria-label` overrides visible content for the accessible name, so if you
+     * slot visible text into the `hamburger` slot, set this to match it.
+     * @default 'Open navigation menu'
+     */
+    openLabel: string;
 }
 
 export interface AllProps extends EndUserProps {
@@ -52,6 +60,7 @@ export abstract class SideBurgerInfo implements SimpleWCInfo {
     props: EndUserProps;
     cssParts?: {
         hamburger: 'Button that toggles the drawer open';
+        openIcon: 'Default hamburger SVG; only present while the `hamburger` slot is not overridden';
         overlay: 'Backdrop shown when the drawer is open';
         drawer: 'Sliding navigation panel';
         drawerHeader: 'Header area containing the title and close button';
@@ -61,6 +70,7 @@ export abstract class SideBurgerInfo implements SimpleWCInfo {
     };
     slots: {
         '': 'Navigation / menu content placed inside the drawer.';
+        hamburger: 'Custom content for the menu button — an icon and/or text. Wrap in an element carrying slot="hamburger" (bare text goes to the default slot). Defaults to a hamburger icon.';
     };
 }
 

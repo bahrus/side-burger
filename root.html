@@ -37,11 +37,14 @@
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    width: 48px;
+                    gap: 8px;
+                    /* Sizes to content so a slotted text label fits; stays a
+                       48px circle when it only holds the default icon. */
+                    min-width: 48px;
                     height: 48px;
-                    padding: 12px;
+                    padding: 0 12px;
                     color: var(--on-surface-color);
-                    border-radius: 50%;
+                    border-radius: 24px;
                     transition: background-color 0.2s ease;
                 }
 
@@ -54,7 +57,8 @@
                     outline-offset: 2px;
                 }
 
-                .hamburger svg {
+                .hamburger svg,
+                slot[name="hamburger"]::slotted(svg) {
                     width: 24px;
                     height: 24px;
                 }
@@ -229,8 +233,8 @@
                 aria-expanded="false"
                 aria-controls="drawer"
                 type="button">
-                <slot name="buttonContents">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <slot name="hamburger">
+                    <svg viewBox="0 0 24 24" part="open-icon" aria-hidden="true" focusable="false">
                         <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor"/>
                     </svg>
                 </slot>

@@ -52,7 +52,7 @@
                                 "clone"
                             ],
                             "assign": {
-                                "?.hamburgerButton": "?.clone?.querySelector?.[name=hamburger]",
+                                "?.hamburgerButton": "?.clone?.querySelector?.button[name=hamburger]",
                                 "?.closeButton": "?.clone?.querySelector?.[name=close]",
                                 "?.overlay": "?.clone?.querySelector?.[name=overlay]",
                                 "?.drawer": "?.clone?.querySelector?.#drawer"
@@ -73,6 +73,15 @@
                                     1,
                                     -1
                                 ]
+                            }
+                        },
+                        {
+                            "ifAllOf": [
+                                "hamburgerButton",
+                                "openLabel"
+                            ],
+                            "assign": {
+                                "?.hamburgerButton?.ariaLabel": "?.openLabel"
                             }
                         },
                         {
@@ -149,7 +158,8 @@
                     "defaultPropVals": {
                         "open": false,
                         "disabled": false,
-                        "position": "left"
+                        "position": "left",
+                        "openLabel": "Open navigation menu"
                     }
                 }
             },
@@ -174,6 +184,11 @@
                     "sourceOfTruth": true,
                     "valIfNull": "left",
                     "mapsTo": "position"
+                },
+                "openLabel": "open-label",
+                "_openLabel": {
+                    "valIfNull": "Open navigation menu",
+                    "mapsTo": "openLabel"
                 }
             }
         },

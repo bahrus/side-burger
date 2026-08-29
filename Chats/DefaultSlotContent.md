@@ -136,3 +136,91 @@ per issue #1.
 .hamburger { width: auto; min-width: 48px; border-radius: 24px; padding: 0 12px; }
 ```
 
+## Bruce's Response I
+
+Please implement all your recommendations, and add your implementation notes below.
+
+---
+
+## Claude's Implementation Notes
+
+All five points implemented and validated in a headless Chromium run against
+`npm run serve` (see "Verification" below).
+
+### `root.html`
+
+- **Slot renamed** `buttonContents` → `hamburger`, and `part="open-icon"` added
+  to the default `<svg>`:
+  ```html
+  <slot name="hamburger">
+      <svg viewBox="0 0 24 24" part="open-icon" aria-hidden="true" focusable="false">…</svg>
+  </slot>
+  ```
+- **`.hamburger` is now a pill that collapses to a circle.** `width:48px` →
+  `min-width:48px` + auto width, `padding:12px` → `padding:0 12px`,
+  `border-radius:50%` → `24px`, added `gap:8px` for icon+text. Icon-only renders
+  identically to before (48×48 circle); a text label makes it grow.
+- **Slotted icons are now sized:**
+  ```css
+  .hamburger svg,
+  slot[name="hamburger"]::slotted(svg) { width: 24px; height: 24px; }
+  ```
+  Scoped to the slot so it can't catch an `<svg>` a consumer puts in the menu.
+- The static `aria-label="Open navigation menu"` stays on the button as the
+  no-JS fallback; el-maker overrides it at runtime (below).
+
+### `el-maker.mjs` → regenerated `el-maker.json`
+
+- New `openLabel` prop, `open-label` attribute (`valIfNull` +
+  `defaultPropVals` = `"Open navigation menu"`, same belt-and-suspenders as
+  `position`).
+- New merge sets the accessible name:
+  ```js
+  { ifAllOf: [props.hamburgerButton, props.openLabel],
+    ...doAssign(set($.hamburgerButton.ariaLabel).to($.openLabel)) }
+  ```
+  Fires when the button is resolved and re-fires if `open-label` changes at
+  runtime.
+- **Caught during implementation:** `querySelector('[name=hamburger]')` for
+  `hamburgerButton` is now ambiguous — `<slot name="hamburger">` also has
+  `name="hamburger"`. Tightened to `querySelector('button[name=hamburger]')`.
+  (Tree order meant the bare selector still happened to return the button, but
+  it was fragile.) The other `[name=…]` lookups don't collide with any slot.
+
+### `types.d.ts`
+
+- `openLabel: string` on `EndUserProps` with `@default`.
+- `hamburger` entry in `slots`, `openIcon` in `cssParts`.
+
+### `README.md`
+
+- New "Customizing the menu button" section: `hamburger` slot usage, the
+  wrap-in-an-element rule, the `open-label`/`aria-label` relationship, and the
+  `::part(hamburger)` / `::part(open-icon)` hooks.
+
+### Verification
+
+Headless Chromium, `node ./node_modules/spa-ssi/serve.js`:
+
+| check | result |
+|---|---|
+| `demo/dev.html`: default `aria-label` | `"Open navigation menu"` ✓ |
+| default icon still rendered via slot fallback | ✓ |
+| hamburger click opens drawer (`#drawer.inert` → `false`) | ✓ |
+| console during open | clean ✓ |
+| custom page, `open-label="Open the site menu"` → button `aria-label` | `"Open the site menu"` ✓ |
+| `<span slot="hamburger">` → `assignedSlot.name` | `"hamburger"` ✓ |
+| custom-slot page: hamburger click opens drawer | ✓ |
+| console | clean ✓ |
+
+Temp test files (`demo/_slotcheck.html`, `_slotcheck.mjs`) were removed after the
+run. Working tree holds only: `root.html`, `el-maker.mjs`, `el-maker.json`,
+`types.d.ts`, `README.md`, and this chat.
+
+### Not done (out of scope / judgement)
+
+- No visual/screenshot test of the pill button with a long label — the CSS is
+  straightforward but worth an eyeball in a real browser.
+- `open-label` is not `sourceOfTruth` (no prop→attr reflection), matching
+  `inertTarget`. Say the word if you want it reflected like `position`.
+
