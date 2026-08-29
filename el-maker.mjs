@@ -233,7 +233,8 @@ const features = {
         swipeDismiss: {
             customData: swipeDismissCustomData,
             withAttrs: swipeDismissAttrs,
-        }
+        },
+        focusTrap: {}
     }
 };
 

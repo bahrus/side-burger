@@ -23,11 +23,11 @@
   },
   "dependencies": {
     "assign-gingerly": "0.0.87",
-    "be-hive": "0.1.16",
-    "el-maker": "0.0.22",
+    "be-hive": "0.1.18",
+    "el-maker": "0.0.24",
     "imp-h": "0.0.6",
-    "mount-observer": "0.1.51",
-    "roundabout-lib": "0.0.35"
+    "mount-observer": "0.1.53",
+    "roundabout-lib": "0.0.36"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",

@@ -230,6 +230,7 @@
                     "valIfNull": 0.5
                 }
             }
-        }
+        },
+        "focusTrap": {}
     }
 }
