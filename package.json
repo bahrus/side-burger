@@ -1,6 +1,6 @@
 {
   "name": "side-burger",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Material Design inspired side drawer custom element triggered by a hamburger menu button",
   "type": "module",
   "main": "root.mjs",
