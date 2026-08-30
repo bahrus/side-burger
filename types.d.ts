@@ -53,6 +53,8 @@ export interface AllProps extends EndUserProps {
     clone: Element | DocumentFragment | ShadowRoot;
     readonly ownerDocument: Document;
     escapeKeyPressed: boolean;
+    /** Latched true once the drawer has been opened; gates the close-focus-return. */
+    drawerHasOpened: boolean;
     inertTargetElements: Element[];
     swipeDismiss: Props;
 }

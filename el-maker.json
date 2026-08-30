@@ -118,6 +118,28 @@
                             }
                         },
                         {
+                            "ifAllOf": [
+                                "open"
+                            ],
+                            "assign": {
+                                "?.drawerHasOpened": true
+                            }
+                        },
+                        {
+                            "ifKeyIn": [
+                                "open"
+                            ],
+                            "ifNoneOf": [
+                                "open"
+                            ],
+                            "ifAllOf": [
+                                "drawerHasOpened"
+                            ],
+                            "assign": {
+                                "?.hamburgerButton?.focus": {}
+                            }
+                        },
+                        {
                             "ifKeyIn": [
                                 "disabled"
                             ],

@@ -34,6 +34,7 @@ const props = {
     openLabel: 'openLabel',
     dragHandle: 'dragHandle',
     dragHandleEl: 'dragHandleEl',
+    drawerHasOpened: 'drawerHasOpened',
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
@@ -90,7 +91,28 @@ const merges = [
         ifAllOf: [props.open],
         ...doAssign(
             set($.querySelector('a').focus()).to({}),
-            
+
+        )
+    },
+    {
+        // Latch that the drawer has been opened at least once. Fires only on the
+        // false->true transition of `open`, so it stays unset on initial load.
+        ifAllOf: [props.open],
+        ...doAssign(
+            set($.drawerHasOpened).to(true)
+        )
+    },
+    {
+        // Return focus to the hamburger button when the drawer closes, so the
+        // user isn't dumped on <body> after a swipe / Escape / close-button /
+        // overlay dismissal. `drawerHasOpened` gates out the initial load (when
+        // `open` is set to its false default but the drawer never actually
+        // opened).
+        ifKeyIn: [props.open],
+        ifNoneOf: [props.open],
+        ifAllOf: [props.drawerHasOpened],
+        ...doAssign(
+            set($.hamburgerButton.focus()).to({})
         )
     },
     {
