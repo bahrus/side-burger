@@ -105,23 +105,53 @@
                     transition: none;
                 } */
 
+                /* Optional edge grab-tab, shown only with the `drag-handle`
+                   attribute. It sits on the drawer's inner edge (facing the
+                   page) so it can be grabbed to swipe the drawer away. The
+                   whole drawer body is still draggable regardless. */
                 .drag-handle {
+                    display: none;
                     position: absolute;
-                    left: -12px;
                     top: 50%;
+                    right: -16px;
+                    width: 16px;
+                    height: 56px;
                     transform: translateY(-50%);
-                    width: 12px;
-                    height: 48px;
-                    background: rgba(0, 0, 0, 0.2);
-                    border-radius: 6px 0 0 6px;
+                    background-color: var(--surface-color);
+                    border: 1px solid rgba(0, 0, 0, 0.12);
+                    border-left: none;
+                    border-radius: 0 8px 8px 0;
+                    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.12);
                     cursor: grab;
                     touch-action: none;
                 }
 
+                .drag-handle::after {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    margin: auto;
+                    width: 3px;
+                    height: 24px;
+                    border-radius: 2px;
+                    background-color: rgba(0, 0, 0, 0.28);
+                }
+
+                .drag-handle:active {
+                    cursor: grabbing;
+                }
+
+                :host([drag-handle]) .drag-handle {
+                    display: block;
+                }
+
                 :host([position="right"]) .drag-handle {
-                    left: auto;
-                    right: -12px;
-                    border-radius: 0 6px 6px 0;
+                    right: auto;
+                    left: -16px;
+                    border: 1px solid rgba(0, 0, 0, 0.12);
+                    border-right: none;
+                    border-radius: 8px 0 0 8px;
+                    box-shadow: -2px 0 6px rgba(0, 0, 0, 0.12);
                 }
 
                 .drawer:not([inert]) {

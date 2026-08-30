@@ -37,6 +37,20 @@ stays a 48px circle when it only holds an icon.
 `::part(hamburger)` styles the button; `::part(open-icon)` styles the default SVG
 (present only while the slot is not overridden).
 
+## Swipe to dismiss
+
+The open drawer can be swiped away with a pointer — drag the drawer body toward
+its docked edge past ~40% of its width, or flick it. Add the `drag-handle`
+attribute to also show a grab-tab on the drawer's inner edge as a visible cue:
+
+```html
+<side-burger imp-h="side-burger/root.html" drag-handle> … </side-burger>
+```
+
+The tab is presentation only (`::part(drag-handle)` to restyle it); the drawer
+body is draggable with or without it, and Escape / the close button / the scrim
+remain the accessible ways to close.
+
 ## Viewing Demos Locally
 
 1. Install git

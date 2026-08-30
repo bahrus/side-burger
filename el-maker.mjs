@@ -32,6 +32,7 @@ const props = {
     inertTargetElements: 'inertTargetElements',
     swipeDismiss: 'swipeDismiss',
     openLabel: 'openLabel',
+    dragHandle: 'dragHandle',
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
@@ -190,6 +191,15 @@ const withAttrs = {
     [`_${props.openLabel}`]: {
         valIfNull: 'Open navigation menu',
         mapsTo: props.openLabel
+    },
+    // Presentation-only: `:host([drag-handle])` in root.html shows the edge
+    // grab-tab. Wired here purely so the `dragHandle` property mirrors the
+    // attribute; there is no merge behind it.
+    [props.dragHandle]: 'drag-handle',
+    [`_${props.dragHandle}`]: {
+        instanceOf: 'Boolean',
+        sourceOfTruth: true,
+        mapsTo: props.dragHandle
     }
 }
 

@@ -189,6 +189,12 @@
                 "_openLabel": {
                     "valIfNull": "Open navigation menu",
                     "mapsTo": "openLabel"
+                },
+                "dragHandle": "drag-handle",
+                "_dragHandle": {
+                    "instanceOf": "Boolean",
+                    "sourceOfTruth": true,
+                    "mapsTo": "dragHandle"
                 }
             }
         },
