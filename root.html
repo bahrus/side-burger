@@ -19,6 +19,11 @@
                     --surface-color: #ffffff;
                     --on-surface-color: #212121;
                     --overlay-color: rgba(0, 0, 0, 0.5);
+                    /* Edge grab-tab (shown with the `drag-handle` attribute). */
+                    --drag-handle-length: 56px;
+                    --drag-handle-thickness: 16px;
+                    --drag-handle-color: var(--surface-color);
+                    --drag-handle-grip-color: rgba(0, 0, 0, 0.28);
                     font-family: Roboto, "Segoe UI", system-ui, sans-serif;
                 }
 
@@ -111,13 +116,14 @@
                    whole drawer body is still draggable regardless. */
                 .drag-handle {
                     display: none;
+                    box-sizing: border-box;
                     position: absolute;
                     top: 50%;
-                    right: -16px;
-                    width: 16px;
-                    height: 56px;
+                    right: calc(-1 * var(--drag-handle-thickness));
+                    width: var(--drag-handle-thickness);
+                    height: var(--drag-handle-length);
                     transform: translateY(-50%);
-                    background-color: var(--surface-color);
+                    background-color: var(--drag-handle-color);
                     border: 1px solid rgba(0, 0, 0, 0.12);
                     border-left: none;
                     border-radius: 0 8px 8px 0;
@@ -134,7 +140,7 @@
                     width: 3px;
                     height: 24px;
                     border-radius: 2px;
-                    background-color: rgba(0, 0, 0, 0.28);
+                    background-color: var(--drag-handle-grip-color);
                 }
 
                 .drag-handle:active {
@@ -147,7 +153,7 @@
 
                 :host([position="right"]) .drag-handle {
                     right: auto;
-                    left: -16px;
+                    left: calc(-1 * var(--drag-handle-thickness));
                     border: 1px solid rgba(0, 0, 0, 0.12);
                     border-right: none;
                     border-radius: 8px 0 0 8px;
@@ -280,7 +286,7 @@
                 aria-modal="true"
                 aria-labelledby="drawer-title"
                 inert>
-                <div class="drag-handle" part="drag-handle" aria-hidden="true"></div>
+                <div name="drag-handle" class="drag-handle" part="drag-handle" aria-hidden="true"></div>
                 <div class="drawer-header" part="drawer-header">
                     <h2 id="drawer-title" class="drawer-title" part="drawer-title">Menu</h2>
                     <button

@@ -85,3 +85,78 @@ Temp test files removed; working tree holds only `root.html`, `el-maker.mjs`,
   automated run; worth an eyeball with `position="right"`.
 - No click-to-close on the tab (kept drag-only to match the reference). Easy to
   add if you want tap-the-tab-to-close.
+
+  ## Bruce's Response
+
+  Those seem like good things to do, please proceed.
+
+---
+
+## Claude's Follow-up Notes
+
+All three done, plus a pre-existing bug fixed along the way.
+
+### 1. Custom properties for the tab
+
+Added to `:host` in `root.html`, used by `.drag-handle`:
+
+| property | default | drives |
+|---|---|---|
+| `--drag-handle-length` | `56px` | tab height |
+| `--drag-handle-thickness` | `16px` | tab width *and* how far it protrudes (`right`/`left`) |
+| `--drag-handle-color` | `var(--surface-color)` | tab fill |
+| `--drag-handle-grip-color` | `rgba(0,0,0,.28)` | the grip bar |
+
+Also added `box-sizing: border-box` to `.drag-handle` so `thickness` maps 1:1 to
+the rendered width. `::part(drag-handle)` still works for anything else.
+
+### 2. Click-to-close on the tab
+
+- `root.html`: the tab div gained `name="drag-handle"`.
+- `el-maker.mjs`: new internal `dragHandleEl` prop resolved in the clone merge
+  (`[name=drag-handle]`), added to `weakRef.properties`, and a
+  `on_click_of_dragHandleEl_assign: { open: false }` compact.
+- Behaviour: a genuine tap closes; a committed swipe-drag doesn't reach the
+  handler (pointer capture retargets its click to the drawer), and a cancelled
+  short drag doesn't either — verified both.
+
+### 3. `position="right"` — verified, and a bug fixed
+
+Eyeballing the right side surfaced a real pre-existing bug: with
+`position="right"`, the drawer *rendered* correctly (CSS keys off the
+attribute) but the **`position` property was stuck at `"left"`**, so the swipe
+feature got `direction = -1` and the drawer could only be swiped the wrong way.
+
+Root cause: `position` was defaulted in **two** places —
+`raConfig.defaultPropVals.position = 'left'` *and* `_position.valIfNull = 'left'`
+— and combined with `_position.sourceOfTruth`, the `defaultPropVals` entry
+shadowed the value coming from the attribute. Removing the redundant
+`defaultPropVals.position` (keeping `_position.valIfNull` as the single default)
+fixes it: `position` prop now tracks the attribute, and the existing
+`direction` merge computes `1` for right-docked drawers with no extra wiring.
+
+Rejected alternative: adding `position` to a merge guard to force a recompute —
+it made roundabout blank the `position` *attribute* back to `left`, breaking the
+CSS too.
+
+### Verification (headless Chromium, `spa-ssi` serve)
+
+Left drawer: `position` prop `left`, `direction` `-1`, left-docked, tab on the
+outer edge, swipe-left dismisses, tap-tab closes, cancelled short drag stays
+open, close button unaffected.
+
+Right drawer (`--drag-handle-thickness:30px; --drag-handle-length:72px`):
+`position` prop `right`, `direction` `1`, right-docked, tab flush on the inner
+(left) edge at the custom `30×72`, swipe-right dismisses, tap-tab closes.
+
+Console clean throughout. Temp test files removed; working tree holds
+`root.html`, `el-maker.mjs`, `el-maker.json`, `types.d.ts`, `README.md`, and
+this chat.
+
+### Separate issue spotted (not touched)
+
+Two `<side-burger>` elements on one page sharing `imp-h="side-burger/root.html"`:
+the **second** instance's shadow DOM gets the template injected **twice** (two
+hamburgers, two drawers). Single-instance pages — every demo and every test
+here — are fine. This looks like an `imp-h` duplicate-injection issue when a
+source is reused; unrelated to this change. Flagging for a separate look.

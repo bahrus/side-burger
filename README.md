@@ -47,9 +47,18 @@ attribute to also show a grab-tab on the drawer's inner edge as a visible cue:
 <side-burger imp-h="side-burger/root.html" drag-handle> … </side-burger>
 ```
 
-The tab is presentation only (`::part(drag-handle)` to restyle it); the drawer
-body is draggable with or without it, and Escape / the close button / the scrim
-remain the accessible ways to close.
+Drag the tab to swipe the drawer away, or just tap it to close. The drawer body
+is draggable with or without the tab, and Escape / the close button / the scrim
+remain the accessible ways to close (the tab itself is not keyboard-focusable).
+
+Restyle the tab with `::part(drag-handle)` or these custom properties:
+
+| property | default |
+|---|---|
+| `--drag-handle-length` | `56px` |
+| `--drag-handle-thickness` | `16px` |
+| `--drag-handle-color` | `var(--surface-color)` |
+| `--drag-handle-grip-color` | `rgba(0, 0, 0, 0.28)` |
 
 ## Viewing Demos Locally
 

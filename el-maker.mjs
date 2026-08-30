@@ -33,6 +33,7 @@ const props = {
     swipeDismiss: 'swipeDismiss',
     openLabel: 'openLabel',
     dragHandle: 'dragHandle',
+    dragHandleEl: 'dragHandleEl',
 };
 
 const $ = (/** @type {typeof paths<RunTimeProps>} */ (/** @type {any} */(paths)))({ withMethods });
@@ -50,7 +51,7 @@ const merges = [
             set($.closeButton).to($.clone.querySelector('[name=close]')),
             set($.overlay).to($.clone.querySelector('[name=overlay]')),
             set($.drawer).to($.clone.querySelector('#drawer')),
-            
+            set($.dragHandleEl).to($.clone.querySelector('[name=drag-handle]')),
         )
     },
     {
@@ -126,7 +127,7 @@ const merges = [
  */
 const raConfig = {
     weakRef: {
-        properties: [props.hamburgerButton, props.closeButton, props.overlay, props.drawer],
+        properties: [props.hamburgerButton, props.closeButton, props.overlay, props.drawer, props.dragHandleEl],
         listProperties: [props.inertTargetElements],
         logIfCollected: 'warn'
     },
@@ -151,6 +152,12 @@ const raConfig = {
         on_click_of_overlay_assign: {
             [props.open]: false
         },
+        // Tap the edge grab-tab to close. A committed swipe-drag doesn't reach
+        // here (pointer capture retargets its click to the drawer); a cancelled
+        // short drag likewise doesn't, so only a genuine tap closes.
+        on_click_of_dragHandleEl_assign: {
+            [props.open]: false
+        },
         on_keydown_of_ownerDocument_assignFromEvent: {
             [$.escapeKeyPressed.QMEq.Path]: [['?.key', 'Escape'], true, false]
         }
@@ -159,7 +166,6 @@ const raConfig = {
     defaultPropVals: {
         [props.open]: false,
         [props.disabled]: false,
-        [props.position]: 'left',
         [props.openLabel]: 'Open navigation menu'
     }
 };

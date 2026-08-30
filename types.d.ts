@@ -48,6 +48,8 @@ export interface AllProps extends EndUserProps {
     closeButton: HTMLButtonElement;
     overlay: HTMLDivElement;
     drawer: HTMLDivElement;
+    /** The edge grab-tab; clicking it closes the drawer. */
+    dragHandleEl: HTMLDivElement;
     clone: Element | DocumentFragment | ShadowRoot;
     readonly ownerDocument: Document;
     escapeKeyPressed: boolean;
